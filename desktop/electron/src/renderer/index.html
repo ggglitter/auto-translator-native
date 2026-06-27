@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auto Translator Native</title>
+    <link rel="stylesheet" href="./styles.css">
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="topbar">
+        <div>
+          <h1>Auto Translator Native</h1>
+          <p>Windows / macOS 双平台文件翻译工具，译文保存到 Downloads。</p>
+        </div>
+        <div class="topbar-actions">
+          <button id="checkUpdatesBtn" type="button">检查更新</button>
+          <button id="downloadUpdateBtn" type="button" disabled>下载更新</button>
+          <button id="installUpdateBtn" type="button" disabled>安装更新</button>
+          <button id="openOutputBtn" type="button">输出目录</button>
+        </div>
+      </section>
+
+      <section class="workspace">
+        <div class="drop-zone" id="dropZone">
+          <div class="drop-icon">⇪</div>
+          <h2>拖拽文件到这里</h2>
+          <p>支持文本、Markdown、CSV、JSON、HTML、SRT、PDF、DOCX。</p>
+          <button id="addFilesBtn" type="button">添加文件</button>
+        </div>
+
+        <aside class="settings-panel">
+          <label>
+            引擎
+            <select id="provider">
+              <option value="dual">双引擎：Gemini 初译 + OpenAI 润色</option>
+              <option value="openai">OpenAI / GPT</option>
+              <option value="gemini">Gemini</option>
+            </select>
+          </label>
+          <label>
+            源语言
+            <input id="sourceLanguage" value="自动识别">
+          </label>
+          <label>
+            目标语言
+            <input id="targetLanguage" value="中文（简体）">
+          </label>
+          <label>
+            风格
+            <input id="tone" value="自然、准确、适合正式阅读">
+          </label>
+          <label>
+            OpenAI / GPT API Key
+            <input id="openaiKey" type="password" autocomplete="off">
+          </label>
+          <label>
+            Gemini API Key
+            <input id="geminiKey" type="password" autocomplete="off">
+          </label>
+          <div class="grid-2">
+            <label>
+              OpenAI Model
+              <input id="openaiModel" value="gpt-4o-mini">
+            </label>
+            <label>
+              Gemini Model
+              <input id="geminiModel" value="gemini-2.0-flash">
+            </label>
+          </div>
+          <div class="grid-2">
+            <label>
+              分段字符
+              <input id="maxChunkCharacters" type="number" min="1000" max="12000" step="500" value="3500">
+            </label>
+            <label>
+              重试次数
+              <input id="retryCount" type="number" min="0" max="5" step="1" value="1">
+            </label>
+          </div>
+          <button id="saveKeysBtn" type="button">保存 Key 到本机加密存储</button>
+        </aside>
+      </section>
+
+      <section class="files-panel">
+        <header>
+          <h2>文件列表</h2>
+          <span id="fileCount">0 个文件</span>
+          <button id="clearFilesBtn" type="button">清空</button>
+        </header>
+        <div id="fileList" class="file-list empty">还没有文件</div>
+      </section>
+
+      <section class="actions-panel">
+        <button id="translateBtn" type="button">开始翻译</button>
+        <button id="previewBtn" type="button">预览抽取</button>
+        <span id="statusText">准备好了。把文件拖进来，或者点“添加文件”。</span>
+      </section>
+
+      <section class="preview-panel" id="previewPanel" hidden>
+        <header>
+          <h2 id="previewTitle">抽取预览</h2>
+          <button id="closePreviewBtn" type="button">关闭</button>
+        </header>
+        <pre id="previewText"></pre>
+      </section>
+    </main>
+    <script src="./app.js"></script>
+  </body>
+</html>

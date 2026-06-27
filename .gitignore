@@ -1,0 +1,25 @@
+.DS_Store
+
+# Local build outputs
+Auto Translator Native.app/
+work/
+.build/
+DerivedData/
+node_modules/
+dist/
+release/
+desktop/electron/node_modules/
+desktop/electron/dist/
+
+# Logs and temporary files
+*.log
+*.tmp
+*.swp
+
+# Local secrets. Real API keys must stay in macOS Keychain or the user's private environment.
+.env
+.env.*
+*.key
+*.pem
+*.p12
+*.mobileprovision
