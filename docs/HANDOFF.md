@@ -50,7 +50,7 @@ Expected current shape:
 
 - Preflight passed with `./scripts/preflight_local.sh`.
 - Release gate passed at `03a9c96` before docs-only handoff updates: `./scripts/check_release_gate.sh`.
-- Latest fixture directory: `/tmp/autotranslator-manual-smoke-20260627-203341`.
+- Latest fixture directory: `/tmp/autotranslator-manual-smoke-20260627-204308`.
 - Latest manual smoke bundle: `/tmp/autotranslator-manual-bundle-20260627-112011`.
 - Latest package: `/tmp/autotranslator-packages-20260627-111622/AutoTranslatorNative-1.0.0-20260627-111622.zip`.
 - Package checksum: `/tmp/autotranslator-packages-20260627-111622/AutoTranslatorNative-1.0.0-20260627-111622.zip.sha256`.
@@ -74,6 +74,8 @@ Expected current shape:
 - Signing/notarization plan: `docs/SIGNING_NOTARIZATION_PLAN.md`.
 - Signing secret-name checklist: `docs/SIGNING_SECRETS_CHECKLIST.md`.
 - Signing readiness gate: `./scripts/check_signing_readiness.sh`.
+- GitHub Actions signing secret-name wiring is in place for macOS and Windows build steps.
+- `desktop/electron/scripts/adhoc-sign-mac.cjs` skips ad-hoc signing when production mac signing env is present.
 - GitHub publish runbook: `docs/GITHUB_PUBLISH_RUNBOOK.md`.
 - Electron OTA UI has check, download, and install controls wired to `electron-updater`.
 - GitHub repo: `ggglitter/auto-translator-native`.
@@ -87,14 +89,14 @@ Hidden `.agents` and `.codex` directories could not be created because the sandb
 
 ## Remaining Release Work
 
-- Configure mac Developer ID signing and notarization outside the repo using the non-secret checklist.
-- Configure Windows code signing outside the repo using the non-secret checklist.
+- Add real mac Developer ID/notarization secrets outside the repo and verify the signed/notarized artifacts.
+- Add real Windows code-signing secrets outside the repo and verify Authenticode signing.
 - Produce and verify the next universal macOS release artifacts; `v1.0.0` remains arm64-only.
 - Keep real API keys, certificates, provisioning profiles, and signing secrets out of repo files.
 
 ## Next Small Step
 
-Continue with external production-signing setup or a new universal macOS artifact build. The source release baseline and ad-hoc `v1.0.0` release assets are already published and verified.
+Continue with external production-signing setup or a new universal macOS artifact build. CI secret-name wiring is already in place; real secret values must stay outside the repo.
 
 Useful next checks:
 

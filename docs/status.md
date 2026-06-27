@@ -29,6 +29,7 @@ Last updated: 2026-06-27
 - Signing and notarization planning lives in `docs/SIGNING_NOTARIZATION_PLAN.md`.
 - Non-secret signing secret names live in `docs/SIGNING_SECRETS_CHECKLIST.md`.
 - `scripts/check_signing_readiness.sh` validates local signing readiness without requiring or storing real secrets.
+- GitHub Actions maps signing secret names into platform-specific build steps; the mac ad-hoc signing hook skips itself when production mac signing env is present.
 - GitHub publish runbook lives in `docs/GITHUB_PUBLISH_RUNBOOK.md`.
 - GitHub publication is complete for the source release baseline: `main` and `v1.0.0` are on `git@github.com:ggglitter/auto-translator-native.git`.
 - Latest downloaded release asset directory: `/Users/laura/Downloads/AutoTranslatorDeliverables/ReleaseAssets-v1.0.0`.
@@ -49,7 +50,7 @@ Last updated: 2026-06-27
 - `scripts/package_local_app.sh` creates a local zip package, SHA-256 checksum, and `manifest.json` under `/tmp`, then verifies the checksum and zip structure.
 - `scripts/verify_local_package.sh` re-verifies an existing local package manifest, checksum, zip integrity, required `.app` members, and local-only publishing/secrets flags.
 - Latest verified local package: `/tmp/autotranslator-packages-20260627-111622/AutoTranslatorNative-1.0.0-20260627-111622.zip` with matching `.sha256` and `manifest.json`; `shasum -c`, `unzip -t`, `python3 -m json.tool`, and `./scripts/verify_local_package.sh` passed.
-- Local preflight is scripted in `scripts/preflight_local.sh`; it includes first-commit readiness, cross-platform release config, signing readiness, extraction smoke, app build, bundle launch-structure smoke, and LaunchServices environment discrimination. Latest run passed with fixture directory `/tmp/autotranslator-manual-smoke-20260627-203341`. Manual findings are tracked in `docs/MANUAL_SMOKE_FINDINGS.md`.
+- Local preflight is scripted in `scripts/preflight_local.sh`; it includes first-commit readiness, cross-platform release config, signing readiness, extraction smoke, app build, bundle launch-structure smoke, and LaunchServices environment discrimination. Latest run passed with fixture directory `/tmp/autotranslator-manual-smoke-20260627-204308`. Manual findings are tracked in `docs/MANUAL_SMOKE_FINDINGS.md`.
 - `scripts/check_repo_safety.sh` checks Git remote state, ignored output directories, and real-secret patterns without changing Git state. It accepts no remote before publication or the expected `ggglitter/auto-translator-native` origin after publication setup.
 - `docs/FIRST_COMMIT_PLAN.md` now records the completed first local commit boundary and required checks for future amendments.
 - `scripts/check_first_commit_ready.sh` validates the planned first-commit candidate set without staging files; latest run passed with `first_commit_ready_ok`.

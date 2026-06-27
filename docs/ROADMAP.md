@@ -40,6 +40,7 @@
 - Add final release gate for clean tree, version consistency, tag alignment, and origin validation.
 - Publish `main` and `v1.0.0` to GitHub and verify release assets.
 - Add universal mac release build command and CI artifact naming.
+- Add CI signing secret-name wiring and production-signing ad-hoc skip guard.
 
 ## Later
 

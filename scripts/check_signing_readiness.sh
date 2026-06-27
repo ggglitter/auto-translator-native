@@ -92,6 +92,40 @@ done
 echo "signing_docs_ok"
 
 echo
+echo "== signing workflow wiring =="
+WORKFLOW=".github/workflows/desktop-release.yml"
+[[ -f "$WORKFLOW" ]] || {
+  echo "Missing workflow: $WORKFLOW" >&2
+  exit 1
+}
+for token in \
+  "secrets.MAC_CSC_LINK" \
+  "secrets.MAC_CSC_KEY_PASSWORD" \
+  "secrets.APPLE_API_KEY" \
+  "secrets.APPLE_API_KEY_ID" \
+  "secrets.APPLE_API_ISSUER" \
+  "secrets.APPLE_ID" \
+  "secrets.APPLE_APP_SPECIFIC_PASSWORD" \
+  "secrets.APPLE_TEAM_ID" \
+  "secrets.WIN_CSC_LINK" \
+  "secrets.WIN_CSC_KEY_PASSWORD"
+do
+  grep -q "$token" "$WORKFLOW" || {
+    echo "Workflow is missing signing secret reference: $token" >&2
+    exit 1
+  }
+done
+grep -q "Build macOS desktop artifact" "$WORKFLOW" || {
+  echo "Workflow is missing separate macOS build step." >&2
+  exit 1
+}
+grep -q "Build Windows desktop artifact" "$WORKFLOW" || {
+  echo "Workflow is missing separate Windows build step." >&2
+  exit 1
+}
+echo "signing_workflow_wiring_ok"
+
+echo
 echo "== electron release config =="
 /usr/bin/python3 - "$ROOT" <<'PY'
 import json
@@ -100,6 +134,7 @@ from pathlib import Path
 
 root = Path(sys.argv[1])
 package = json.loads((root / "desktop/electron/package.json").read_text(encoding="utf-8"))
+adhoc_hook = (root / "desktop/electron/scripts/adhoc-sign-mac.cjs").read_text(encoding="utf-8")
 build = package.get("build", {})
 mac = build.get("mac", {})
 win = build.get("win", {})
@@ -115,6 +150,10 @@ if not {"dmg", "zip"}.issubset(set(mac.get("target", []))):
 win_targets = win.get("target", [])
 if not any(isinstance(item, dict) and item.get("target") == "nsis" for item in win_targets):
     raise SystemExit("win.target must include nsis.")
+if "Production mac signing environment detected" not in adhoc_hook:
+    raise SystemExit("ad-hoc mac signing hook must skip when production signing env is present.")
+if "process.env.CSC_LINK" not in adhoc_hook or "process.env.CSC_NAME" not in adhoc_hook:
+    raise SystemExit("ad-hoc mac signing hook must check CSC_LINK or CSC_NAME.")
 
 print("electron_release_config_ok")
 PY

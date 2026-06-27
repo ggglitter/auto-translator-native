@@ -40,6 +40,8 @@ files, docs, shell history, or generated artifacts checked into Git.
 
 macOS job mapping should expose the mac certificate to electron-builder as
 `CSC_LINK` and `CSC_KEY_PASSWORD`, plus one notarization credential family.
+The ad-hoc mac signing hook skips itself when `CSC_LINK`, `CSC_NAME`, or
+`MAC_CSC_LINK` is present so a Developer ID signature is not overwritten.
 
 Windows job mapping should expose `WIN_CSC_LINK` and
 `WIN_CSC_KEY_PASSWORD`.

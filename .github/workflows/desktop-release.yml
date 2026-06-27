@@ -42,9 +42,26 @@ jobs:
       - name: Check release config
         run: npm run check
 
-      - name: Build desktop artifact
+      - name: Build macOS desktop artifact
+        if: matrix.artifact == 'macos-universal'
         env:
           GH_TOKEN: ${{ github.token }}
+          CSC_LINK: ${{ secrets.MAC_CSC_LINK }}
+          CSC_KEY_PASSWORD: ${{ secrets.MAC_CSC_KEY_PASSWORD }}
+          APPLE_API_KEY: ${{ secrets.APPLE_API_KEY }}
+          APPLE_API_KEY_ID: ${{ secrets.APPLE_API_KEY_ID }}
+          APPLE_API_ISSUER: ${{ secrets.APPLE_API_ISSUER }}
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+        run: ${{ matrix.dist_cmd }}
+
+      - name: Build Windows desktop artifact
+        if: matrix.artifact == 'windows'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          WIN_CSC_LINK: ${{ secrets.WIN_CSC_LINK }}
+          WIN_CSC_KEY_PASSWORD: ${{ secrets.WIN_CSC_KEY_PASSWORD }}
         run: ${{ matrix.dist_cmd }}
 
       - name: Upload artifact

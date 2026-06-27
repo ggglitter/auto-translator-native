@@ -13,6 +13,8 @@ certificates, passwords, tokens, provisioning profiles, or API keys in the repo.
 - Non-secret signing secret names live in `docs/SIGNING_SECRETS_CHECKLIST.md`.
 - `./scripts/check_signing_readiness.sh` verifies that common signing material
   is ignored and not tracked.
+- GitHub Actions maps signing secret names into the platform-specific build
+  steps without storing secret values in the repo.
 - User-facing macOS OTA should not be claimed complete until Developer ID
   signing and notarization are configured.
 - Public Windows distribution should not be called polished until code signing
@@ -33,9 +35,10 @@ GitHub Actions secrets, the developer keychain, or a secure certificate store.
 Do not commit `.p12`, `.cer`, `.mobileprovision`, private keys, API keys, or
 notarization passwords.
 
-Later implementation should add CI-only environment variable wiring for
-`electron-builder`, then verify that the generated `.dmg` and `.zip` are signed
-and notarized before publishing them as production OTA assets.
+CI-only environment variable wiring for `electron-builder` is in place. After
+real secrets are added outside the repo, verify that the generated `.dmg` and
+`.zip` are signed and notarized before publishing them as production OTA
+assets.
 
 ## Windows
 

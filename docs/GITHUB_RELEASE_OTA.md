@@ -90,6 +90,8 @@ For polished public distribution:
 - macOS auto-update should use Developer ID signing and notarization.
 - Windows distribution should eventually use code signing to reduce SmartScreen warnings.
 - These signing secrets belong in GitHub Actions secrets or the OS keychain, not in repo files.
+- The workflow already maps signing secret names into platform-specific build steps.
+- The mac ad-hoc signing hook skips itself when production mac signing env is present, so a Developer ID signature is not overwritten.
 
 Initial unsigned/ad-hoc builds can prove packaging and GitHub Release metadata, but macOS user-facing OTA is not complete until signing/notarization is configured.
 

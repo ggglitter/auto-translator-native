@@ -11,6 +11,11 @@ module.exports = async function afterPack(context) {
     `${context.packager.appInfo.productFilename}.app`
   );
 
+  if (process.env.CSC_LINK || process.env.CSC_NAME || process.env.MAC_CSC_LINK) {
+    console.log("Production mac signing environment detected; skipping ad-hoc signing hook.");
+    return;
+  }
+
   execFileSync("codesign", ["--force", "--deep", "--sign", "-", appPath], {
     stdio: "inherit"
   });
