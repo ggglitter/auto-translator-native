@@ -68,6 +68,19 @@ done
 echo "source_checks_steps_ok"
 
 echo
+echo "== checkout credential persistence =="
+grep -q "persist-credentials: false" "$SOURCE_WORKFLOW" || {
+  echo "Source Checks checkout must not persist GitHub credentials." >&2
+  exit 1
+}
+RELEASE_PERSIST_FALSE_COUNT="$(grep -c "persist-credentials: false" "$RELEASE_WORKFLOW")"
+if [[ "$RELEASE_PERSIST_FALSE_COUNT" -lt 2 ]]; then
+  echo "Desktop Release build and publish jobs must not persist checkout credentials." >&2
+  exit 1
+fi
+echo "checkout_persist_credentials_disabled_ok"
+
+echo
 echo "== source checks isolation =="
 for token in \
   "contents: write" \

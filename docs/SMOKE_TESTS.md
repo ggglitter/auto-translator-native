@@ -49,9 +49,10 @@ the no-secret source-check workflow:
 The source-check workflow runs on `main`, pull requests targeting `main`, and
 manual dispatch. It executes repo safety, cross-platform release config,
 signing readiness, and extraction smoke checks without storing or requiring
-real API keys or signing credentials. The workflow gate also verifies the
-source-check workflow does not publish releases, upload artifacts, reference
-signing secrets, or build release artifacts.
+real API keys or signing credentials. The workflow gate also verifies checkout
+credentials are not persisted, and that the source-check workflow does not
+publish releases, upload artifacts, reference signing secrets, or build release
+artifacts.
 
 The macOS release artifact check verifies macOS release assets beyond shape:
 

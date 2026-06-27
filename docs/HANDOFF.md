@@ -86,6 +86,7 @@ Expected current shape:
 - Signing secret-name checklist: `docs/SIGNING_SECRETS_CHECKLIST.md`.
 - Signing readiness gate: `./scripts/check_signing_readiness.sh`.
 - GitHub Actions signing secret-name wiring is in place for macOS and Windows build steps.
+- GitHub Actions checkout steps set `persist-credentials: false`; publishing still uses explicit `GH_TOKEN` environment wiring.
 - GitHub Actions source checks run repo safety, cross-platform release config, signing readiness, and extraction smoke without secrets; the workflow gate rejects publishing, artifact-upload, and signing-secret references in that source-check workflow.
 - `desktop/electron/scripts/adhoc-sign-mac.cjs` skips ad-hoc signing when production mac signing env is present.
 - GitHub publish runbook: `docs/GITHUB_PUBLISH_RUNBOOK.md`.

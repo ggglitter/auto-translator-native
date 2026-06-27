@@ -23,7 +23,8 @@ Last updated: 2026-06-27
 - Electron dependencies are pinned to exact versions in `desktop/electron/package.json` until a generated `package-lock.json` can be added from an authenticated/networked environment.
 - GitHub Actions release workflow lives in `.github/workflows/desktop-release.yml`.
 - GitHub Actions source-check workflow lives in `.github/workflows/source-checks.yml`; it runs no-secret local source gates on `main`, pull requests, and manual dispatch.
-- `scripts/check_github_workflows.sh` validates the source-check workflow, verifies it does not publish/sign/build release artifacts, and validates the release workflow triggers, build matrix, signing wiring, artifact upload, and release publishing steps.
+- GitHub Actions checkout steps disable persisted credentials; release publishing uses explicit `GH_TOKEN` environment wiring.
+- `scripts/check_github_workflows.sh` validates the source-check workflow, verifies checkout credentials are not persisted, verifies source checks do not publish/sign/build release artifacts, and validates the release workflow triggers, build matrix, signing wiring, artifact upload, and release publishing steps.
 - GitHub Release / OTA plan lives in `docs/GITHUB_RELEASE_OTA.md`.
 - Release artifact acceptance criteria live in `docs/RELEASE_ARTIFACTS.md`.
 - `scripts/check_release_artifacts.sh` validates downloaded or local Electron release artifacts without network access.
