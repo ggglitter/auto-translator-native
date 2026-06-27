@@ -27,7 +27,7 @@ Last updated: 2026-06-27
 - `scripts/check_github_workflows.sh` validates the source-check workflow, verifies checkout credentials are not persisted, verifies source checks do not publish/sign/build release artifacts, and validates the release workflow triggers, build matrix, signing wiring, artifact upload, and release publishing steps.
 - GitHub Release / OTA plan lives in `docs/GITHUB_RELEASE_OTA.md`.
 - Release artifact acceptance criteria live in `docs/RELEASE_ARTIFACTS.md`.
-- `scripts/check_release_artifacts.sh` validates downloaded or local Electron release artifacts without network access.
+- `scripts/check_release_artifacts.sh` validates downloaded or local Electron release artifacts without network access, including updater metadata file references, byte sizes, and SHA-512 hashes.
 - `scripts/check_macos_release_artifact.sh` deep-checks macOS DMG verification, ZIP strict codesign, and executable architecture.
 - `scripts/check_release_gate.sh` validates final push readiness: clean tree, matching versions, release tag at HEAD, and expected origin.
 - Signing and notarization planning lives in `docs/SIGNING_NOTARIZATION_PLAN.md`.
@@ -37,8 +37,9 @@ Last updated: 2026-06-27
 - GitHub publish runbook lives in `docs/GITHUB_PUBLISH_RUNBOOK.md`.
 - GitHub publication is complete for the source release baseline: `main` and `v1.0.0` are on `git@github.com:ggglitter/auto-translator-native.git`.
 - Latest downloaded release asset directory: `/Users/laura/Downloads/AutoTranslatorDeliverables/ReleaseAssets-v1.0.0`.
-- `ReleaseAssets-v1.0.0` verification passed with `./scripts/check_release_artifacts.sh /Users/laura/Downloads/AutoTranslatorDeliverables/ReleaseAssets-v1.0.0`.
-- `ReleaseAssets-v1.0.0` macOS deep verification passed with `./scripts/check_macos_release_artifact.sh --mac-arch arm64 /Users/laura/Downloads/AutoTranslatorDeliverables/ReleaseAssets-v1.0.0`.
+- `ReleaseAssets-v1.0.0` passed the earlier artifact shape check, but the hardened `./scripts/check_release_artifacts.sh /Users/laura/Downloads/AutoTranslatorDeliverables/ReleaseAssets-v1.0.0` now fails because `latest-mac.yml` and `latest.yml` reference hyphenated payload names while the downloaded assets use dotted names.
+- The referenced `ReleaseAssets-v1.0.0` payload contents match the updater metadata size and SHA-512 values under their dotted local file names; the remaining failure is the updater metadata URL/file-name mismatch.
+- `ReleaseAssets-v1.0.0` macOS DMG verification, ZIP extraction, strict codesign verification, and executable architecture checks passed before the updater metadata URL/file-name mismatch was enforced.
 - macOS release ZIP strict codesign verification passed for the extracted app.
 - macOS DMG verification passed with `hdiutil verify`.
 - `build.sh` rebuilds and verifies a temporary `.app`, replaces the ignored local app bundle, then copies it to the repo as `Auto Translator Native.app`.
@@ -74,3 +75,4 @@ Last updated: 2026-06-27
 - macOS user-facing OTA remains unsigned/not notarized for production until Developer ID signing and notarization secrets are configured outside the repo.
 - Windows release artifacts remain unsigned until a Windows code-signing certificate is configured outside the repo.
 - Current `v1.0.0` macOS release assets are arm64-only; the next release is configured for universal macOS artifacts but still needs a CI/package run to produce and verify them.
+- Current `v1.0.0` updater metadata references hyphenated asset names that do not exactly match the downloaded dotted asset names. Fix this before relying on GitHub Release OTA, either by uploading assets with the metadata names or producing the next release with matching artifact names and metadata.

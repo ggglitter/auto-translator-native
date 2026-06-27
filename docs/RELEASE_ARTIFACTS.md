@@ -20,7 +20,9 @@ A complete tag release artifact set should contain:
 
 The updater YAML files must include `version`, `files`, and `sha512` entries.
 The macOS metadata should reference the `.zip` payload. The Windows metadata
-should reference the `.exe` installer.
+should reference the `.exe` installer. Each `files` entry must reference a
+payload that exists next to the updater YAML, and its `size` and base64
+SHA-512 must match the actual file.
 
 For the next macOS release, prefer universal mac artifacts so both Apple
 Silicon and Intel Macs are covered by the same updater feed. The `v1.0.0`
@@ -38,6 +40,17 @@ run:
 The script searches recursively, so it accepts either a merged release folder or
 the separate `auto-translator-macos` and `auto-translator-windows` artifact
 folders.
+
+The payload file names referenced by `latest-mac.yml` and `latest.yml` must
+exist exactly as written next to the updater YAML. A matching SHA-512 under a
+different local file name is still a failure because OTA clients use the
+metadata URL to locate the release asset.
+
+Current `v1.0.0` finding: the downloaded payload contents match the metadata
+size and SHA-512 values, but the metadata URLs use hyphenated file names while
+the downloaded assets use dotted file names. Treat that as an OTA metadata
+blocker until the GitHub Release assets are renamed/reuploaded or the next
+release is produced with matching names.
 
 To check one platform at a time:
 
@@ -84,7 +97,8 @@ artifact directory.
 ## What This Proves
 
 Passing this check proves that the package set is structurally ready for a
-GitHub Release style OTA feed.
+GitHub Release style OTA feed and that updater metadata points at payload files
+with matching byte sizes and SHA-512 hashes.
 
 Passing the macOS deep check additionally proves that the downloaded or local
 macOS DMG checksum is valid, the ZIP contains a verifiable `.app`, and the app

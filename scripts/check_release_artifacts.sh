@@ -170,6 +170,87 @@ require_updater_yaml() {
       echo "Updater metadata does not reference expected installer type: $file" >&2
       FAIL=1
     }
+    if ! /usr/bin/python3 - "$file" <<'PY'
+import base64
+import hashlib
+import re
+import sys
+from pathlib import Path
+
+yaml_path = Path(sys.argv[1])
+lines = yaml_path.read_text(encoding="utf-8").splitlines()
+entries = []
+current = None
+in_files = False
+
+for line in lines:
+    if re.match(r"^files:\s*$", line):
+        in_files = True
+        continue
+    if in_files and line and not line.startswith((" ", "\t", "-")):
+        in_files = False
+        current = None
+    if not in_files:
+        continue
+
+    url_match = re.match(r"^\s*-\s+url:\s*(.+?)\s*$", line)
+    if url_match:
+        current = {"url": url_match.group(1).strip("'\"")}
+        entries.append(current)
+        continue
+
+    if current is None:
+        continue
+
+    sha_match = re.match(r"^\s+sha512:\s*(.+?)\s*$", line)
+    if sha_match:
+        current["sha512"] = sha_match.group(1).strip("'\"")
+        continue
+
+    size_match = re.match(r"^\s+size:\s*([0-9]+)\s*$", line)
+    if size_match:
+        current["size"] = int(size_match.group(1))
+
+if not entries:
+    raise SystemExit(f"Updater metadata has no files entries: {yaml_path}")
+
+ok = True
+for entry in entries:
+    missing = [key for key in ("url", "sha512", "size") if key not in entry]
+    if missing:
+        print(f"Updater metadata file entry is missing {', '.join(missing)}: {yaml_path}", file=sys.stderr)
+        ok = False
+        continue
+
+    payload = yaml_path.parent / entry["url"]
+    if not payload.is_file():
+        print(f"Updater metadata references missing payload: {yaml_path} -> {entry['url']}", file=sys.stderr)
+        ok = False
+        continue
+
+    data = payload.read_bytes()
+    actual_size = len(data)
+    if actual_size != entry["size"]:
+        print(
+            f"Updater metadata size mismatch for {payload}: expected {entry['size']}, got {actual_size}",
+            file=sys.stderr,
+        )
+        ok = False
+
+    actual_sha512 = base64.b64encode(hashlib.sha512(data).digest()).decode("ascii")
+    if actual_sha512 != entry["sha512"]:
+        print(f"Updater metadata sha512 mismatch for {payload}", file=sys.stderr)
+        ok = False
+
+    if actual_size == entry["size"] and actual_sha512 == entry["sha512"]:
+        print(f"updater_payload_ok {payload}")
+
+if not ok:
+    raise SystemExit(1)
+PY
+    then
+      FAIL=1
+    fi
   done
 }
 

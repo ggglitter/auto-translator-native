@@ -54,6 +54,9 @@ credentials are not persisted, and that the source-check workflow does not
 publish releases, upload artifacts, reference signing secrets, or build release
 artifacts.
 
+The release artifact checker also validates updater metadata `files` entries
+against actual payload file names, sizes, and base64 SHA-512 hashes.
+
 The macOS release artifact check verifies macOS release assets beyond shape:
 
 ```zsh

@@ -2,7 +2,7 @@
 
 ## Next Small Slices
 
-- Download Actions or Release artifacts and run `./scripts/check_release_artifacts.sh`.
+- Fix GitHub Release asset filenames so `latest*.yml` URLs exactly match uploaded/downloaded payload names, then rerun `./scripts/check_release_artifacts.sh`.
 - For the next macOS release, enforce universal mac artifacts with `./scripts/check_release_artifacts.sh --platform mac --mac-arch universal`.
 - Configure signing/notarization secrets before claiming production macOS OTA.
 - Perform manual app-window pass and record real findings.
@@ -44,6 +44,7 @@
 - Add local GitHub workflow release gate.
 - Add deep macOS release artifact verification.
 - Add no-secret GitHub source checks for main and pull requests.
+- Add updater metadata payload file-name, size, and SHA-512 validation.
 
 ## Later
 

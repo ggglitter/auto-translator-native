@@ -32,18 +32,22 @@ Last updated: 2026-06-27
 
 ## Latest Release Assets
 
-- Status: pass
+- Status: partial; updater metadata file-name mismatch found by the hardened artifact checker
 - Release tag: `v1.0.0`
 - Published commit: `03a9c96 Add ad-hoc mac release signing`
 - GitHub repo: `https://github.com/ggglitter/auto-translator-native`
 - Asset directory: `/Users/laura/Downloads/AutoTranslatorDeliverables/ReleaseAssets-v1.0.0`
-- Artifact check: `./scripts/check_release_artifacts.sh /Users/laura/Downloads/AutoTranslatorDeliverables/ReleaseAssets-v1.0.0` passed with `release_artifacts_ok`
-- macOS deep artifact check: `./scripts/check_macos_release_artifact.sh --mac-arch arm64 /Users/laura/Downloads/AutoTranslatorDeliverables/ReleaseAssets-v1.0.0` passed with `macos_release_artifact_ok`
+- Earlier artifact shape check: passed before updater metadata URL/file-name matching was enforced
+- Hardened artifact check: `./scripts/check_release_artifacts.sh /Users/laura/Downloads/AutoTranslatorDeliverables/ReleaseAssets-v1.0.0` fails because updater metadata references missing hyphenated payload filenames
+- Metadata/content check: the dotted downloaded payload files match the updater metadata size and SHA-512 values by content
+- macOS deep artifact checks before metadata URL/file-name enforcement: DMG verification, ZIP extraction, strict codesign verification, and executable architecture passed with `--mac-arch arm64`
 - macOS ZIP strict codesign: passed after extracting `Auto.Translator.Native-1.0.0-arm64-mac.zip` and running strict deep verification on the contained app
 - macOS DMG verification: `hdiutil verify /Users/laura/Downloads/AutoTranslatorDeliverables/ReleaseAssets-v1.0.0/Auto.Translator.Native-1.0.0-arm64.dmg` passed
 - macOS app executable architecture: `arm64`
-- Remaining release hardening: mac Developer ID signing/notarization, Windows code signing, and Intel/universal macOS builds
+- Remaining release hardening: exact updater metadata asset-name match, mac Developer ID signing/notarization, Windows code signing, and Intel/universal macOS builds
 
 ## Findings
 
 - LaunchServices `open` returned `kLSNoExecutableErr` in the sandbox for the promoted app, the original source-output app, and a generated minimal `.app`. Manual double-click/open verification on the user's desktop session is still required.
+- `latest-mac.yml` references `Auto-Translator-Native-1.0.0-arm64-mac.zip` and `Auto-Translator-Native-1.0.0-arm64.dmg`, but the downloaded assets are `Auto.Translator.Native-1.0.0-arm64-mac.zip` and `Auto.Translator.Native-1.0.0-arm64.dmg`.
+- `latest.yml` references `Auto-Translator-Native-Setup-1.0.0.exe`, but the downloaded asset is `Auto.Translator.Native.Setup.1.0.0.exe`.

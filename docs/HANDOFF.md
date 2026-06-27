@@ -16,8 +16,8 @@ Current publication state:
 - release tag: `v1.0.0`
 - `main` and `v1.0.0` are pushed to GitHub; `v1.0.0` remains pinned to `03a9c96090046224dba468f97c15bc6dd1bec5ba`, while `main` intentionally continues with follow-up release-readiness commits
 - release assets were downloaded to `/Users/laura/Downloads/AutoTranslatorDeliverables/ReleaseAssets-v1.0.0`
-- `ReleaseAssets-v1.0.0` passed the release artifact checker
-- `ReleaseAssets-v1.0.0` passed the macOS deep artifact checker with `--mac-arch arm64`
+- `ReleaseAssets-v1.0.0` passed the earlier release artifact shape checker, but the hardened checker now fails because updater metadata references hyphenated payload names while the downloaded assets use dotted names
+- `ReleaseAssets-v1.0.0` passed macOS DMG verification, ZIP extraction, strict codesign verification, and executable architecture checks before the updater metadata URL/file-name mismatch was enforced
 - mac ZIP strict codesign verification passed
 - DMG `hdiutil verify` passed
 - real API keys must stay out of repo files and chat
@@ -75,11 +75,12 @@ Expected current shape:
 - GitHub workflow gate: `./scripts/check_github_workflows.sh`.
 - GitHub Release / OTA plan: `docs/GITHUB_RELEASE_OTA.md`.
 - Release artifact checklist: `docs/RELEASE_ARTIFACTS.md`.
-- Release artifact checker: `./scripts/check_release_artifacts.sh`.
+- Release artifact checker: `./scripts/check_release_artifacts.sh`; it validates updater metadata file references, byte sizes, and SHA-512 hashes.
 - macOS release artifact deep checker: `./scripts/check_macos_release_artifact.sh`.
 - Downloaded release artifacts: `/Users/laura/Downloads/AutoTranslatorDeliverables/ReleaseAssets-v1.0.0`.
-- Release artifact check passed for the downloaded assets.
-- macOS deep artifact check passed for the downloaded assets with `--mac-arch arm64`.
+- Hardened release artifact check fails for the downloaded assets because `latest-mac.yml` references `Auto-Translator-Native-1.0.0-arm64-mac.zip` and `Auto-Translator-Native-1.0.0-arm64.dmg`, while the downloaded files are `Auto.Translator.Native-1.0.0-arm64-mac.zip` and `Auto.Translator.Native-1.0.0-arm64.dmg`; `latest.yml` similarly references `Auto-Translator-Native-Setup-1.0.0.exe` while the downloaded file is `Auto.Translator.Native.Setup.1.0.0.exe`.
+- The mismatched downloaded payloads match the updater metadata size and SHA-512 values by content, so the blocker is exact asset naming for OTA URLs.
+- macOS DMG verification, ZIP extraction, strict codesign verification, and executable architecture checks passed for the downloaded assets with `--mac-arch arm64` before the metadata URL/file-name mismatch was enforced.
 - macOS ZIP strict codesign verification passed for the extracted app.
 - DMG `hdiutil verify` passed.
 - Signing/notarization plan: `docs/SIGNING_NOTARIZATION_PLAN.md`.
@@ -105,11 +106,12 @@ Hidden `.agents` and `.codex` directories could not be created because the sandb
 - Add real mac Developer ID/notarization secrets outside the repo and verify the signed/notarized artifacts.
 - Add real Windows code-signing secrets outside the repo and verify Authenticode signing.
 - Produce and verify the next universal macOS release artifacts; `v1.0.0` remains arm64-only.
+- Fix GitHub Release OTA asset names so `latest*.yml` URLs exactly match uploaded/downloaded asset filenames.
 - Keep real API keys, certificates, provisioning profiles, and signing secrets out of repo files.
 
 ## Next Small Step
 
-Continue with external production-signing setup or a new universal macOS artifact build. CI secret-name wiring is already in place; real secret values must stay outside the repo.
+Continue by fixing the updater metadata asset-name mismatch in GitHub Release artifacts, or produce a new universal macOS artifact build whose `latest*.yml` URLs exactly match the uploaded asset filenames. CI secret-name wiring is already in place; real secret values must stay outside the repo.
 
 Useful next checks:
 
