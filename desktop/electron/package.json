@@ -59,6 +59,7 @@
         "owner": "ggglitter",
         "repo": "auto-translator-native"
       }
-    ]
+    ],
+    "afterPack": "scripts/adhoc-sign-mac.cjs"
   }
 }

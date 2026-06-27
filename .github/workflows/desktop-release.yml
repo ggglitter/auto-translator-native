@@ -82,4 +82,8 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           TAG_NAME: ${{ github.ref_name }}
         run: |
-          gh release create "$TAG_NAME" release-artifacts/* --repo "$GITHUB_REPOSITORY" --title "$TAG_NAME" --generate-notes
+          if gh release view "$TAG_NAME" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            gh release upload "$TAG_NAME" release-artifacts/* --repo "$GITHUB_REPOSITORY" --clobber
+          else
+            gh release create "$TAG_NAME" release-artifacts/* --repo "$GITHUB_REPOSITORY" --title "$TAG_NAME" --generate-notes
+          fi
