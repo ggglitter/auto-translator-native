@@ -7,7 +7,7 @@ Last updated: 2026-06-27
 - Status: pass
 - Command: `./scripts/preflight_local.sh`
 - Last run: 2026-06-27
-- Fixture directory: `/tmp/autotranslator-manual-smoke-20260627-123846`
+- Fixture directory: `/tmp/autotranslator-manual-smoke-20260627-133340`
 - Covers: first-commit readiness, cross-platform release config, extraction smoke, disposable fixture generation, local app build, app launch smoke, real-secret pattern scan
 - Result: `preflight_ok`
 - Note: LaunchServices `open` returned `kLSNoExecutableErr` in the sandbox. A generated minimal `.app` fails the same way, so `smoke_launch_app.sh` records this as an environment limitation and passes bundle structure/codesign checks.

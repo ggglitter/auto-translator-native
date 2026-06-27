@@ -5,14 +5,23 @@ Last updated: 2026-06-27
 Target repo:
 
 - GitHub: `ggglitter/auto-translator-native`
-- SSH remote: `git@github.com:ggglitter/auto-translator-native.git`
-- HTTPS remote: `https://github.com/ggglitter/auto-translator-native`
+- HTTPS remote: `https://github.com/ggglitter/auto-translator-native.git`
+- SSH remote option: `git@github.com:ggglitter/auto-translator-native.git`
 
 Do not paste GitHub tokens, API keys, Apple certificates, Windows signing certificates, or passwords into repo files or chat.
 
-## 1. Create Empty GitHub Repo
+## Current Local State
 
-Create `ggglitter/auto-translator-native` on GitHub.
+- The GitHub repo has already been created by the user.
+- Local commit exists: `8c732c4 Promote Auto Translator Native with desktop release pipeline`.
+- Local tag exists: `v1.0.0`.
+- Local remote is already configured as HTTPS origin.
+- SSH push failed with `Permission denied (publickey)`.
+- The user asked to leave HTTPS push, custom domain, and separate HTTPS OTA host work until the final gate.
+
+Use this runbook only when that final GitHub/HTTPS gate is resumed.
+
+## 1. Confirm GitHub Repo Shape
 
 For GitHub Release OTA without embedding credentials in the app, make the repo public or make release assets publicly accessible. If it must remain private, use GitHub Actions as build evidence and move OTA hosting to a separate HTTPS static host later.
 
@@ -23,7 +32,7 @@ Do not initialize the GitHub repo with README, `.gitignore`, or license; the loc
 From repo root:
 
 ```zsh
-cd /Users/laura/Documents/翻译软件
+cd /Users/laura/Downloads/AutoTranslatorDeliverables/SourceRepo
 ./scripts/preflight_local.sh
 ```
 
@@ -36,31 +45,36 @@ Expected:
 
 ## 3. First Commit And Push
 
-Prefer SSH if your GitHub SSH key is already configured:
+The first local commit and tag already exist. Do not create a new commit just to push the existing state.
+
+When the HTTPS gate is resumed, push from the current local repo:
 
 ```zsh
-git add .github .gitignore AGENTS.md README.md Resources Sources build.sh desktop docs scripts
 git status --short --branch --ignored
-git commit -m "Promote Auto Translator Native with desktop release pipeline"
-git remote add origin git@github.com:ggglitter/auto-translator-native.git
+./scripts/check_release_gate.sh
 git push -u origin main
+git push origin v1.0.0
 ```
 
-If SSH is not configured, use HTTPS only through your local Git credential manager. Do not paste tokens into repo files or chat:
+If the HTTPS push prompts for authentication, use the browser or local Git credential manager. Do not paste tokens into repo files or chat.
+
+If the remote was changed accidentally, reset it to the expected HTTPS origin:
 
 ```zsh
-git remote add origin https://github.com/ggglitter/auto-translator-native.git
-git push -u origin main
+git remote set-url origin https://github.com/ggglitter/auto-translator-native.git
 ```
+
+If new local commits were added after creating `v1.0.0`, the release gate will fail because the tag points at the older commit. Since `v1.0.0` has not been pushed yet, the better fix is to commit the intended changes, move the local tag to the final commit, and then push:
+
+```zsh
+git tag -f v1.0.0 HEAD
+```
+
+If the tag has already been pushed by the time this happens, do not rewrite the public tag. Create the next version instead, such as `v1.0.1`.
 
 ## 4. Trigger Windows/macOS Release Build
 
-After `main` is pushed:
-
-```zsh
-git tag v1.0.0
-git push origin v1.0.0
-```
+Pushing the existing `v1.0.0` tag should trigger the `Desktop Release` workflow.
 
 The `Desktop Release` workflow should build:
 
@@ -83,6 +97,12 @@ On GitHub:
 6. Confirm both Windows and macOS artifacts exist.
 7. Confirm updater metadata files exist.
 
+After downloading the artifacts or release assets locally, run:
+
+```zsh
+./scripts/check_release_artifacts.sh /path/to/release-artifacts
+```
+
 ## 6. Signing Caveat
 
 Unsigned Windows builds may show SmartScreen warnings.
@@ -90,3 +110,5 @@ Unsigned Windows builds may show SmartScreen warnings.
 Unsigned/not-notarized macOS builds may show Gatekeeper warnings, and production-grade macOS OTA needs Developer ID signing and notarization secrets configured outside the repo.
 
 The app can still prove cross-platform packaging and OTA metadata before signing is complete, but do not claim polished production OTA until signing/notarization checks pass.
+
+See `docs/SIGNING_NOTARIZATION_PLAN.md` for the non-secret signing plan.

@@ -3,14 +3,17 @@
 Last updated: 2026-06-27
 
 This repo is moving from local-only promotion to a GitHub-hosted, cross-platform desktop release flow.
+HTTPS push, a custom update domain, and any separate HTTPS update host are later gates. Current offline work should focus on source, packaging, and artifact verification.
 
 ## Target Repository
 
-Planned GitHub repository:
+GitHub repository:
 
 - `ggglitter/auto-translator-native`
-- SSH remote: `git@github.com:ggglitter/auto-translator-native.git`
-- HTTPS remote: `https://github.com/ggglitter/auto-translator-native`
+- HTTPS remote: `https://github.com/ggglitter/auto-translator-native.git`
+- SSH remote option: `git@github.com:ggglitter/auto-translator-native.git`
+
+The local repo currently has the HTTPS origin configured, but pushing is deferred until the HTTPS/GitHub gate is resumed.
 
 Do not store GitHub tokens, API keys, Apple certificates, or Windows signing certificates in repo files.
 
@@ -64,6 +67,14 @@ On GitHub, verify:
 - A tag build creates a Release.
 - Release assets include both Windows and macOS artifacts plus updater YAML files.
 
+After downloading artifacts or release assets, run:
+
+```zsh
+./scripts/check_release_artifacts.sh /path/to/release-artifacts
+```
+
+Use `docs/RELEASE_ARTIFACTS.md` as the artifact acceptance checklist.
+
 ## Secrets And Signing
 
 No real API keys are needed for app builds.
@@ -75,6 +86,8 @@ For polished public distribution:
 - These signing secrets belong in GitHub Actions secrets or the OS keychain, not in repo files.
 
 Initial unsigned/ad-hoc builds can prove packaging and GitHub Release metadata, but macOS user-facing OTA is not complete until signing/notarization is configured.
+
+See `docs/SIGNING_NOTARIZATION_PLAN.md` for the non-secret signing plan.
 
 ## Local Validation
 

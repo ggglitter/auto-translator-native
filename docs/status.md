@@ -4,9 +4,13 @@ Last updated: 2026-06-27
 
 ## Repository
 
-- Local formal repo path: `/Users/laura/Documents/翻译软件`
+- Local formal repo path: `/Users/laura/Downloads/AutoTranslatorDeliverables/SourceRepo`
 - Branch: `main`
-- Remote: intentionally absent
+- Local commit: `8c732c4 Promote Auto Translator Native with desktop release pipeline`
+- Local tag: `v1.0.0`
+- Remote: `origin https://github.com/ggglitter/auto-translator-native.git`
+- GitHub repo: `https://github.com/ggglitter/auto-translator-native`
+- Push state: not pushed from this environment; HTTPS push and domain/HTTPS update hosting are deferred until the final gate
 - Source promoted from: `/Users/laura/Documents/Codex/2026-06-22/new-chat-2/outputs/AutoTranslatorNative`
 
 ## Current State
@@ -18,6 +22,10 @@ Last updated: 2026-06-27
 - Electron dependencies are pinned to exact versions in `desktop/electron/package.json` until a generated `package-lock.json` can be added from an authenticated/networked environment.
 - GitHub Actions release workflow lives in `.github/workflows/desktop-release.yml`.
 - GitHub Release / OTA plan lives in `docs/GITHUB_RELEASE_OTA.md`.
+- Release artifact acceptance criteria live in `docs/RELEASE_ARTIFACTS.md`.
+- `scripts/check_release_artifacts.sh` validates downloaded or local Electron release artifacts without network access.
+- `scripts/check_release_gate.sh` validates final push readiness: clean tree, matching versions, release tag at HEAD, and expected origin.
+- Signing and notarization planning lives in `docs/SIGNING_NOTARIZATION_PLAN.md`.
 - GitHub publish runbook lives in `docs/GITHUB_PUBLISH_RUNBOOK.md`.
 - `build.sh` rebuilds and verifies a temporary `.app`, replaces the ignored local app bundle, then copies it to the repo as `Auto Translator Native.app`.
 - The app has a local extraction preview action that reads the first queued file and shows extracted text before any API translation.
@@ -33,14 +41,15 @@ Last updated: 2026-06-27
 - `scripts/package_local_app.sh` creates a local zip package, SHA-256 checksum, and `manifest.json` under `/tmp`, then verifies the checksum and zip structure.
 - `scripts/verify_local_package.sh` re-verifies an existing local package manifest, checksum, zip integrity, required `.app` members, and local-only publishing/secrets flags.
 - Latest verified local package: `/tmp/autotranslator-packages-20260627-111622/AutoTranslatorNative-1.0.0-20260627-111622.zip` with matching `.sha256` and `manifest.json`; `shasum -c`, `unzip -t`, `python3 -m json.tool`, and `./scripts/verify_local_package.sh` passed.
-- Local preflight is scripted in `scripts/preflight_local.sh`; it includes first-commit readiness, cross-platform release config, extraction smoke, app build, bundle launch-structure smoke, and LaunchServices environment discrimination. Latest run passed with fixture directory `/tmp/autotranslator-manual-smoke-20260627-123846`. Manual findings are tracked in `docs/MANUAL_SMOKE_FINDINGS.md`.
+- Local preflight is scripted in `scripts/preflight_local.sh`; it includes first-commit readiness, cross-platform release config, extraction smoke, app build, bundle launch-structure smoke, and LaunchServices environment discrimination. Latest run passed with fixture directory `/tmp/autotranslator-manual-smoke-20260627-133340`. Manual findings are tracked in `docs/MANUAL_SMOKE_FINDINGS.md`.
 - `scripts/check_repo_safety.sh` checks Git remote state, ignored output directories, and real-secret patterns without changing Git state. It accepts no remote before publication or the expected `ggglitter/auto-translator-native` origin after publication setup.
-- `docs/FIRST_COMMIT_PLAN.md` documents the first local commit boundary and required checks. No staging or commit has been performed.
+- `docs/FIRST_COMMIT_PLAN.md` now records the completed first local commit boundary and required checks for future amendments.
 - `scripts/check_first_commit_ready.sh` validates the planned first-commit candidate set without staging files; latest run passed with `first_commit_ready_ok`.
 - Secret scanning scripts resolve `rg` from PATH or common Homebrew locations and fail if it is unavailable, avoiding false passes when non-interactive PATH is sparse.
 - Build outputs and Swift module cache are ignored by Git.
 - Real API keys are not stored in repo files.
 - User has now requested GitHub publication, Windows/macOS builds, and OTA; prior local-only GitHub/push boundary is superseded for this goal.
+- User has also requested HTTPS push and domain work be left until the end; continue local/offline release work first.
 
 ## Known Constraints
 
@@ -48,5 +57,6 @@ Last updated: 2026-06-27
 - A second attempt on 2026-06-27 was also rejected by the approval service. Do not bypass this limitation.
 - Durable state is therefore kept in root `AGENTS.md` and `docs/` for now, including `docs/HANDOFF.md`.
 - Strict codesign verification can be blocked when macOS adds or re-adds file-provider attributes to the final local `.app` under Documents. `build.sh` verifies a clean temporary bundle before copying it back for local development.
-- `gh` is not installed in this environment, and a network SSH auth check was blocked by the approval service. GitHub creation/push still needs an available authenticated path.
+- `gh` is not installed in this environment. User terminal reported SSH push failed with `Permission denied (publickey)`, so the remote was switched to HTTPS.
+- HTTPS push is intentionally postponed for now.
 - macOS user-facing OTA is not complete until Developer ID signing/notarization secrets are configured outside the repo.

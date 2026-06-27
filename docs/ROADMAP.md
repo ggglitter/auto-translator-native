@@ -2,7 +2,10 @@
 
 ## Next Small Slices
 
-- Publish source to GitHub, then verify GitHub Actions build evidence.
+- Keep HTTPS push, custom domain, and separate HTTPS OTA hosting as final gates.
+- After HTTPS push is resumed, publish source and tag to GitHub, then verify GitHub Actions build evidence.
+- Before final push, run `./scripts/check_release_gate.sh` so version, tag, clean tree, and origin are aligned.
+- Download Actions or Release artifacts and run `./scripts/check_release_artifacts.sh`.
 - Configure signing/notarization secrets before claiming production macOS OTA.
 - Perform manual app-window pass and record real findings.
 
@@ -32,9 +35,14 @@
 - Add GitHub Actions desktop release workflow.
 - Add GitHub publish runbook and command printer.
 - Add Electron OTA check/download/install controls.
+- Record completed local first commit, tag, and HTTPS remote state.
+- Add release artifact acceptance checker and artifact checklist.
+- Add signing/notarization plan without secrets.
+- Add final release gate for clean tree, version consistency, tag alignment, and origin validation.
 
 ## Later
 
 - Package a notarized macOS build.
 - Complete signing and notarization for user-facing OTA.
+- Decide whether OTA remains on public GitHub Releases or moves to a separate HTTPS update host.
 - Add export formats beyond plain translated text for DOCX/PDF inputs.

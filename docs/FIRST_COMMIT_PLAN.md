@@ -1,14 +1,20 @@
-# First Commit Plan
+# First Commit Record
 
 Last updated: 2026-06-27
 
-This repo has no commits yet. Do not stage or commit until the user explicitly authorizes that Git gate.
+The first local commit has been completed:
 
-Current user goal now authorizes GitHub publication and push. Keep this file as the commit boundary reference and still run the checks before staging.
+- Commit: `8c732c4 Promote Auto Translator Native with desktop release pipeline`
+- Tag: `v1.0.0`
+- Remote: `origin https://github.com/ggglitter/auto-translator-native.git`
 
-## Commit Boundary
+Keep this file as the source boundary reference for future amendments. Do not stage, commit, or push additional changes unless the user explicitly authorizes that Git gate.
 
-The first local commit should capture the promoted source repo and local durable state only.
+Current user goal authorizes GitHub publication and push eventually, but HTTPS push and domain/HTTPS update hosting are deferred until the final gate.
+
+## Original Commit Boundary
+
+The first local commit captured the promoted source repo and local durable state only.
 
 Include:
 
@@ -31,7 +37,7 @@ Exclude:
 - private keys, certificates, provisioning profiles, API keys, tokens, or chat-copied secrets
 - signing secrets, GitHub tokens, release credentials, or notarization credentials
 
-## Required Checks Before Staging
+## Required Checks Before Future Staging
 
 Run:
 
@@ -44,20 +50,19 @@ Expected results:
 - `repo_safety_ok`
 - `first_commit_ready_ok`
 - `preflight_ok`
-- no Git remote output
 - remote may be absent before publish or point to `ggglitter/auto-translator-native` after publish setup
 - `Auto Translator Native.app/` and `work/` remain ignored
 - real-secret pattern scan reports no matches
 
-## Candidate Local Commit Commands
+## Historical Local Commit Commands
 
-Only run these after explicit user authorization:
+These commands were the original first-commit shape. Do not re-run them unless intentionally creating a new commit after checking the current diff.
 
 ```zsh
 git add .gitignore AGENTS.md README.md Resources Sources build.sh docs scripts
 git add .github desktop/electron
 git status --short --branch --ignored
-git commit -m "Promote Auto Translator Native local repo"
+git commit -m "Promote Auto Translator Native with desktop release pipeline"
 ```
 
 The current user goal authorizes GitHub push, but push still requires an authenticated GitHub remote.

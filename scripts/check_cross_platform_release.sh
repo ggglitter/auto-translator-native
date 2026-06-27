@@ -64,9 +64,25 @@ echo "github_workflow_ok"
 echo
 echo "== docs =="
 [[ -f "$ROOT/docs/GITHUB_RELEASE_OTA.md" ]]
+[[ -f "$ROOT/docs/RELEASE_ARTIFACTS.md" ]]
+[[ -f "$ROOT/docs/SIGNING_NOTARIZATION_PLAN.md" ]]
 grep -q "electron-updater" "$ROOT/docs/GITHUB_RELEASE_OTA.md"
 grep -q "ggglitter/auto-translator-native" "$ROOT/docs/GITHUB_RELEASE_OTA.md"
+grep -q "check_release_artifacts.sh" "$ROOT/docs/RELEASE_ARTIFACTS.md"
+grep -q "Developer ID" "$ROOT/docs/SIGNING_NOTARIZATION_PLAN.md"
 echo "release_docs_ok"
+
+echo
+echo "== release artifact checker =="
+[[ -x "$ROOT/scripts/check_release_artifacts.sh" ]]
+grep -q -- "--platform" "$ROOT/scripts/check_release_artifacts.sh"
+echo "release_artifact_checker_ok"
+
+echo
+echo "== release gate checker =="
+[[ -x "$ROOT/scripts/check_release_gate.sh" ]]
+grep -q "release_tag_points_at_head_ok" "$ROOT/scripts/check_release_gate.sh"
+echo "release_gate_checker_ok"
 
 echo
 echo "cross_platform_release_config_ok"

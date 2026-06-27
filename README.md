@@ -4,7 +4,8 @@
 
 ## 当前定位
 
-- 本地正式源码 repo：`/Users/laura/Documents/翻译软件`
+- 本地正式源码 repo：`/Users/laura/Downloads/AutoTranslatorDeliverables/SourceRepo`
+- GitHub repo：`https://github.com/ggglitter/auto-translator-native`
 - 源码入口：`Sources/main.swift`
 - 打包资源：`Resources/Info.plist`
 - 本地构建产物：`Auto Translator Native.app`
@@ -59,7 +60,7 @@ open "Auto Translator Native.app"
 ./scripts/check_repo_safety.sh
 ```
 
-它会确认没有配置 Git 远端、本地构建产物仍被忽略，并扫描真实密钥样式的字符串。
+它会确认 Git 远端为空或只指向 `ggglitter/auto-translator-native`，本地构建产物仍被忽略，并扫描真实密钥样式的字符串。
 
 ## Windows / macOS 发布轨道
 
@@ -71,9 +72,18 @@ desktop/electron
 
 该轨道使用 Electron、`electron-builder` 和 `electron-updater`。GitHub Actions 会在 Windows 和 macOS runner 上构建安装包，并通过 GitHub Release 元数据提供 OTA 更新。
 
+发布产物下载后可离线验收：
+
+```zsh
+./scripts/check_release_artifacts.sh /path/to/release-artifacts
+```
+
+签名/公证计划见 `docs/SIGNING_NOTARIZATION_PLAN.md`。HTTPS push、域名和独立 HTTPS OTA host 放在最后处理。
+
 ## 仓库约束
 
 - 当前目标已授权 GitHub 发布、push、Windows/macOS 构建和 OTA。
-- 提交边界见 `docs/FIRST_COMMIT_PLAN.md`。
+- 首个本地提交记录见 `docs/FIRST_COMMIT_PLAN.md`。
+- 后续 push、release、域名和 HTTPS OTA host 需要按当前发布 gate 单独执行。
 - 不保存真实 API Key。
 - `Auto Translator Native.app/` 和 `work/` 是本地构建产物，不作为源码纳入版本控制。

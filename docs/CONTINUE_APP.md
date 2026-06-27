@@ -4,7 +4,7 @@ Use this file as the repo-local continuation entry until hidden `.agents/skills/
 
 ## Resume Prompt
 
-继续 Auto Translator Native，本地正式 repo 在 `/Users/laura/Documents/翻译软件`。先看 `git status --short --branch --ignored`、`git remote -v`、`docs/HANDOFF.md` 和相关 diff，不要覆盖用户改动。当前用户已授权 GitHub 发布、push、Windows/macOS 构建和 OTA；仍不要保存真实 API Key。下一步优先做一个小而可验证的产品/工程切片。
+继续 Auto Translator Native，本地正式 repo 在 `/Users/laura/Downloads/AutoTranslatorDeliverables/SourceRepo`。先看 `git status --short --branch --ignored`、`git remote -v`、`docs/HANDOFF.md` 和相关 diff，不要覆盖用户改动。当前用户已授权 GitHub 发布、push、Windows/macOS 构建和 OTA；仍不要保存真实 API Key。下一步优先做一个小而可验证的产品/工程切片。
 
 ## Required First Checks
 
