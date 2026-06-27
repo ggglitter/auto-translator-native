@@ -2,7 +2,7 @@
 
 The local extraction smoke test verifies text extraction without network access or API keys.
 
-The full local preflight runs the repo safety gate, first-commit readiness gate, cross-platform release config check, extraction smoke, fixture generation, app build, and launch-structure smoke:
+The full local preflight runs the repo safety gate, first-commit readiness gate, cross-platform release config check, signing readiness check, extraction smoke, fixture generation, app build, and launch-structure smoke:
 
 ```zsh
 ./scripts/preflight_local.sh
@@ -37,6 +37,16 @@ The cross-platform release config check verifies Electron source, GitHub Actions
 ```zsh
 ./scripts/check_cross_platform_release.sh
 ```
+
+The signing readiness check verifies the repo's non-secret signing boundary:
+
+```zsh
+./scripts/check_signing_readiness.sh
+```
+
+It checks signing material ignore rules, rejects tracked certificate/key-like
+files, verifies the non-secret signing checklist, confirms the Electron release
+config shape, and scans for real-looking API key/token patterns.
 
 The manual smoke bundle verifier checks an existing Finder-friendly manual bundle:
 

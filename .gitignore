@@ -21,5 +21,10 @@ desktop/electron/dist/
 .env.*
 *.key
 *.pem
+*.cer
 *.p12
+*.pfx
+*.p8
+*.certSigningRequest
 *.mobileprovision
+*.provisionprofile

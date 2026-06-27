@@ -36,6 +36,7 @@
 - Record completed local first commit, tag, and HTTPS remote state.
 - Add release artifact acceptance checker and artifact checklist.
 - Add signing/notarization plan without secrets.
+- Add non-secret signing readiness checklist and local gate.
 - Add final release gate for clean tree, version consistency, tag alignment, and origin validation.
 - Publish `main` and `v1.0.0` to GitHub and verify release assets.
 - Add universal mac release build command and CI artifact naming.

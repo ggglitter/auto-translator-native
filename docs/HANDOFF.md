@@ -50,7 +50,7 @@ Expected current shape:
 
 - Preflight passed with `./scripts/preflight_local.sh`.
 - Release gate passed at `03a9c96` before docs-only handoff updates: `./scripts/check_release_gate.sh`.
-- Latest fixture directory: `/tmp/autotranslator-manual-smoke-20260627-201841`.
+- Latest fixture directory: `/tmp/autotranslator-manual-smoke-20260627-203341`.
 - Latest manual smoke bundle: `/tmp/autotranslator-manual-bundle-20260627-112011`.
 - Latest package: `/tmp/autotranslator-packages-20260627-111622/AutoTranslatorNative-1.0.0-20260627-111622.zip`.
 - Package checksum: `/tmp/autotranslator-packages-20260627-111622/AutoTranslatorNative-1.0.0-20260627-111622.zip.sha256`.
@@ -60,7 +60,7 @@ Expected current shape:
 - `./scripts/check_repo_safety.sh` is the remote/ignored-output/real-secret pattern gate. It accepts no remote before publication or the expected `ggglitter/auto-translator-native` origin after publication setup.
 - `docs/FIRST_COMMIT_PLAN.md` documents the exact first local commit boundary, but no staging or commit has been performed.
 - `./scripts/check_first_commit_ready.sh` validates the planned first-commit candidate set without staging files; latest run passed with `first_commit_ready_ok`.
-- `./scripts/preflight_local.sh` now runs first-commit readiness and cross-platform release config before extraction/build/launch smoke; latest run passed with `preflight_ok`.
+- `./scripts/preflight_local.sh` now runs first-commit readiness, cross-platform release config, and signing readiness before extraction/build/launch smoke; latest run passed with `preflight_ok`.
 - `./scripts/verify_manual_smoke_bundle.sh` can re-verify a manual smoke bundle before the user opens it.
 - Cross-platform release track: `desktop/electron/`.
 - GitHub Actions workflow: `.github/workflows/desktop-release.yml`.
@@ -72,6 +72,8 @@ Expected current shape:
 - macOS ZIP strict codesign verification passed for the extracted app.
 - DMG `hdiutil verify` passed.
 - Signing/notarization plan: `docs/SIGNING_NOTARIZATION_PLAN.md`.
+- Signing secret-name checklist: `docs/SIGNING_SECRETS_CHECKLIST.md`.
+- Signing readiness gate: `./scripts/check_signing_readiness.sh`.
 - GitHub publish runbook: `docs/GITHUB_PUBLISH_RUNBOOK.md`.
 - Electron OTA UI has check, download, and install controls wired to `electron-updater`.
 - GitHub repo: `ggglitter/auto-translator-native`.
@@ -85,19 +87,20 @@ Hidden `.agents` and `.codex` directories could not be created because the sandb
 
 ## Remaining Release Work
 
-- Configure mac Developer ID signing and notarization outside the repo.
-- Configure Windows code signing outside the repo.
+- Configure mac Developer ID signing and notarization outside the repo using the non-secret checklist.
+- Configure Windows code signing outside the repo using the non-secret checklist.
 - Produce and verify the next universal macOS release artifacts; `v1.0.0` remains arm64-only.
 - Keep real API keys, certificates, provisioning profiles, and signing secrets out of repo files.
 
 ## Next Small Step
 
-Continue with production-signing readiness or a new universal macOS artifact build. The source release baseline and ad-hoc `v1.0.0` release assets are already published and verified.
+Continue with external production-signing setup or a new universal macOS artifact build. The source release baseline and ad-hoc `v1.0.0` release assets are already published and verified.
 
 Useful next checks:
 
 ```zsh
 ./scripts/check_cross_platform_release.sh
+./scripts/check_signing_readiness.sh
 ./scripts/preflight_local.sh
 ```
 

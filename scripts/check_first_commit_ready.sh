@@ -58,8 +58,13 @@ for path in "${FILES[@]}"; do
     ".env."*|\
     *.key|\
     *.pem|\
+    *.cer|\
     *.p12|\
-    *.mobileprovision)
+    *.pfx|\
+    *.p8|\
+    *.certSigningRequest|\
+    *.mobileprovision|\
+    *.provisionprofile)
       echo "Excluded path is in first commit candidate set: $path" >&2
       exit 1
       ;;

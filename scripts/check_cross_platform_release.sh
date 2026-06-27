@@ -72,10 +72,12 @@ echo "== docs =="
 [[ -f "$ROOT/docs/GITHUB_RELEASE_OTA.md" ]]
 [[ -f "$ROOT/docs/RELEASE_ARTIFACTS.md" ]]
 [[ -f "$ROOT/docs/SIGNING_NOTARIZATION_PLAN.md" ]]
+[[ -f "$ROOT/docs/SIGNING_SECRETS_CHECKLIST.md" ]]
 grep -q "electron-updater" "$ROOT/docs/GITHUB_RELEASE_OTA.md"
 grep -q "ggglitter/auto-translator-native" "$ROOT/docs/GITHUB_RELEASE_OTA.md"
 grep -q "check_release_artifacts.sh" "$ROOT/docs/RELEASE_ARTIFACTS.md"
 grep -q "Developer ID" "$ROOT/docs/SIGNING_NOTARIZATION_PLAN.md"
+grep -q "MAC_CSC_LINK" "$ROOT/docs/SIGNING_SECRETS_CHECKLIST.md"
 echo "release_docs_ok"
 
 echo
@@ -89,6 +91,12 @@ echo "== release gate checker =="
 [[ -x "$ROOT/scripts/check_release_gate.sh" ]]
 grep -q "release_tag_points_at_head_ok" "$ROOT/scripts/check_release_gate.sh"
 echo "release_gate_checker_ok"
+
+echo
+echo "== signing readiness checker =="
+[[ -x "$ROOT/scripts/check_signing_readiness.sh" ]]
+grep -q "signing_readiness_ok" "$ROOT/scripts/check_signing_readiness.sh"
+echo "signing_readiness_checker_ok"
 
 echo
 echo "cross_platform_release_config_ok"

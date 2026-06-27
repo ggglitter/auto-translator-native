@@ -13,6 +13,10 @@ echo "== cross-platform release config =="
 ./scripts/check_cross_platform_release.sh
 
 echo
+echo "== signing readiness =="
+./scripts/check_signing_readiness.sh
+
+echo
 echo "== extraction smoke =="
 ./scripts/smoke_extract.sh
 
