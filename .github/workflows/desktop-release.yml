@@ -18,8 +18,8 @@ jobs:
       matrix:
         include:
           - os: macos-14
-            artifact: macos
-            dist_cmd: npm run dist:mac
+            artifact: macos-universal
+            dist_cmd: npm run dist:mac:universal
           - os: windows-latest
             artifact: windows
             dist_cmd: npm run dist:win

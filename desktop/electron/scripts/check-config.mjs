@@ -21,6 +21,7 @@ for (const relativePath of requiredFiles) {
 const pkg = JSON.parse(fs.readFileSync(path.join(root, "package.json"), "utf8"));
 const build = pkg.build || {};
 const publish = build.publish?.[0] || {};
+const scripts = pkg.scripts || {};
 
 if (build.appId !== "com.codex.autotranslator.native") {
   throw new Error("Unexpected Electron appId.");
@@ -35,6 +36,23 @@ for (const dependency of ["electron-updater", "mammoth", "pdf-parse"]) {
   if (!pkg.dependencies?.[dependency]) {
     throw new Error(`Missing runtime dependency: ${dependency}`);
   }
+}
+for (const scriptName of ["check", "dist", "dist:mac", "dist:mac:universal", "dist:mac:arm64", "dist:mac:x64", "dist:win"]) {
+  if (!scripts[scriptName]) {
+    throw new Error(`Missing package script: ${scriptName}`);
+  }
+}
+if (!scripts["dist:mac"].includes("dist:mac:universal")) {
+  throw new Error("Default mac release script must build the universal mac package.");
+}
+if (!scripts["dist:mac:universal"].includes("--universal")) {
+  throw new Error("Universal mac release script must pass --universal to electron-builder.");
+}
+if (!scripts["dist:mac:arm64"].includes("--arm64")) {
+  throw new Error("arm64 mac release script must pass --arm64 to electron-builder.");
+}
+if (!scripts["dist:mac:x64"].includes("--x64")) {
+  throw new Error("x64 mac release script must pass --x64 to electron-builder.");
 }
 
 const rendererHtml = fs.readFileSync(path.join(root, "src/renderer/index.html"), "utf8");

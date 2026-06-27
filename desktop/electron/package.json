@@ -10,7 +10,10 @@
     "start": "electron .",
     "check": "node scripts/check-config.mjs",
     "dist": "electron-builder --publish never",
-    "dist:mac": "electron-builder --mac dmg zip --publish never",
+    "dist:mac": "npm run dist:mac:universal",
+    "dist:mac:universal": "electron-builder --mac dmg zip --universal --publish never",
+    "dist:mac:arm64": "electron-builder --mac dmg zip --arm64 --publish never",
+    "dist:mac:x64": "electron-builder --mac dmg zip --x64 --publish never",
     "dist:win": "electron-builder --win nsis --publish never"
   },
   "dependencies": {

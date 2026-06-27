@@ -2,40 +2,42 @@
 set -euo pipefail
 
 cat <<'TXT'
-GitHub final-gate publish commands for Auto Translator Native
+GitHub follow-up release commands for Auto Translator Native
 
 Current local state:
   GitHub repo exists: https://github.com/ggglitter/auto-translator-native
-  Local commit exists: 8c732c4 Promote Auto Translator Native with desktop release pipeline
-  Local tag exists: v1.0.0
-  Origin is expected to be HTTPS.
+  main and v1.0.0 are already pushed
+  v1.0.0 points to release commit 03a9c96
+  Origin is expected to be SSH: git@github.com:ggglitter/auto-translator-native.git
 
-Use these only after the HTTPS/GitHub gate is resumed.
-  Do not paste GitHub tokens, API keys, certificates, or passwords into repo files or chat.
+Use these for intentional follow-up source/docs pushes or future release tags.
+Do not paste GitHub tokens, API keys, certificates, or passwords into repo files or chat.
 
 Run from repo root:
 
   cd /Users/laura/Downloads/AutoTranslatorDeliverables/SourceRepo
   ./scripts/preflight_local.sh
-  ./scripts/check_release_gate.sh
   git status --short --branch --ignored
   git remote -v
-  git push -u origin main
-  git push origin v1.0.0
+  git push origin main
 
-If origin is not the expected HTTPS URL:
+If preparing a new release tag:
 
-  git remote set-url origin https://github.com/ggglitter/auto-translator-native.git
+  ./scripts/check_release_gate.sh
+  git tag v1.0.1
+  git push origin main
+  git push origin v1.0.1
 
-If new commits were added after creating v1.0.0 and the tag has not been pushed:
+If origin is not the expected SSH URL:
 
-  git tag -f v1.0.0 HEAD
+  git remote set-url origin git@github.com:ggglitter/auto-translator-native.git
 
-If v1.0.0 has already been pushed, do not rewrite it. Create the next version tag instead.
+Do not rewrite v1.0.0. Create the next version tag instead.
 
-After pushing v1.0.0:
+After pushing a new release tag:
   Verify GitHub Actions > Desktop Release.
-  Verify GitHub Releases contains macOS, Windows, blockmap, latest.yml, latest-mac.yml assets.
+  Verify GitHub Releases contains macOS universal, Windows, blockmap, latest.yml, latest-mac.yml assets.
   Download the artifacts or release assets and run:
     ./scripts/check_release_artifacts.sh /path/to/release-artifacts
+    ./scripts/check_release_artifacts.sh --platform mac --mac-arch universal /path/to/release-artifacts
 TXT

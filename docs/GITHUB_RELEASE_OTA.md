@@ -2,18 +2,18 @@
 
 Last updated: 2026-06-27
 
-This repo is moving from local-only promotion to a GitHub-hosted, cross-platform desktop release flow.
-HTTPS push, a custom update domain, and any separate HTTPS update host are later gates. Current offline work should focus on source, packaging, and artifact verification.
+This repo has moved from local-only promotion to a GitHub-hosted, cross-platform desktop release flow.
+`main` and `v1.0.0` have been pushed to GitHub. A custom update domain or any separate HTTPS update host remains a later gate; current work should focus on packaging, artifact verification, and production signing readiness.
 
 ## Target Repository
 
 GitHub repository:
 
 - `ggglitter/auto-translator-native`
-- HTTPS remote: `https://github.com/ggglitter/auto-translator-native.git`
-- SSH remote option: `git@github.com:ggglitter/auto-translator-native.git`
+- HTTPS remote option: `https://github.com/ggglitter/auto-translator-native.git`
+- Current SSH remote: `git@github.com:ggglitter/auto-translator-native.git`
 
-The local repo currently has the HTTPS origin configured, but pushing is deferred until the HTTPS/GitHub gate is resumed.
+The local repo currently uses the SSH origin.
 
 Do not store GitHub tokens, API keys, Apple certificates, or Windows signing certificates in repo files.
 
@@ -36,11 +36,11 @@ The existing SwiftUI app remains as the native macOS source track under `Sources
 
 1. Push source to GitHub.
 2. Install dependencies in GitHub Actions with `npm install`.
-3. Build macOS artifacts on `macos-14`.
+3. Build universal macOS artifacts on `macos-14`.
 4. Build Windows artifacts on `windows-latest`.
 5. On a tag like `v1.0.0`, create a GitHub Release with:
-   - macOS `.dmg`
-   - macOS `.zip`
+   - macOS universal `.dmg`
+   - macOS universal `.zip`
    - Windows `.exe`
    - `.blockmap`
    - `latest.yml`
@@ -71,6 +71,12 @@ After downloading artifacts or release assets, run:
 
 ```zsh
 ./scripts/check_release_artifacts.sh /path/to/release-artifacts
+```
+
+For the next macOS release, require universal mac output:
+
+```zsh
+./scripts/check_release_artifacts.sh --platform mac --mac-arch universal /path/to/release-artifacts
 ```
 
 Use `docs/RELEASE_ARTIFACTS.md` as the artifact acceptance checklist.
@@ -110,3 +116,7 @@ npm run check
 npm run dist:mac
 npm run dist:win
 ```
+
+`npm run dist:mac` delegates to `npm run dist:mac:universal`. If a fallback
+single-architecture package is needed for debugging, use `npm run dist:mac:arm64`
+or `npm run dist:mac:x64`.

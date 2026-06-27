@@ -5,21 +5,20 @@ Last updated: 2026-06-27
 Target repo:
 
 - GitHub: `ggglitter/auto-translator-native`
-- HTTPS remote: `https://github.com/ggglitter/auto-translator-native.git`
-- SSH remote option: `git@github.com:ggglitter/auto-translator-native.git`
+- Current SSH remote: `git@github.com:ggglitter/auto-translator-native.git`
+- HTTPS remote option: `https://github.com/ggglitter/auto-translator-native.git`
 
 Do not paste GitHub tokens, API keys, Apple certificates, Windows signing certificates, or passwords into repo files or chat.
 
 ## Current Local State
 
-- The GitHub repo has already been created by the user.
-- Local commit exists: `8c732c4 Promote Auto Translator Native with desktop release pipeline`.
-- Local tag exists: `v1.0.0`.
-- Local remote is already configured as HTTPS origin.
-- SSH push failed with `Permission denied (publickey)`.
-- The user asked to leave HTTPS push, custom domain, and separate HTTPS OTA host work until the final gate.
+- The GitHub repo has already been created and published.
+- `main` is pushed to GitHub.
+- `v1.0.0` is pushed and must not be rewritten.
+- Release commit `03a9c96 Add ad-hoc mac release signing` is the `v1.0.0` baseline.
+- Current local follow-up work may live on later commits on `main`.
 
-Use this runbook only when that final GitHub/HTTPS gate is resumed.
+Use this runbook for follow-up release checks and future version tags.
 
 ## 1. Confirm GitHub Repo Shape
 
@@ -43,43 +42,45 @@ Expected:
 - `cross_platform_release_config_ok`
 - `preflight_ok`
 
-## 3. First Commit And Push
+## 3. Follow-Up Commit And Push
 
-The first local commit and tag already exist. Do not create a new commit just to push the existing state.
+Do not create a commit unless there are intentional source or docs changes.
 
-When the HTTPS gate is resumed, push from the current local repo:
+For a docs/source follow-up on `main`:
 
 ```zsh
 git status --short --branch --ignored
+./scripts/check_repo_safety.sh
+git push origin main
+```
+
+For a future release tag, create a new version tag instead of moving `v1.0.0`:
+
+```zsh
 ./scripts/check_release_gate.sh
-git push -u origin main
-git push origin v1.0.0
+git tag v1.0.1
+git push origin main
+git push origin v1.0.1
 ```
 
-If the HTTPS push prompts for authentication, use the browser or local Git credential manager. Do not paste tokens into repo files or chat.
+If Git prompts for authentication, use the browser, SSH agent, or local Git credential manager. Do not paste tokens into repo files or chat.
 
-If the remote was changed accidentally, reset it to the expected HTTPS origin:
+If the remote was changed accidentally, reset it to the expected SSH origin:
 
 ```zsh
-git remote set-url origin https://github.com/ggglitter/auto-translator-native.git
+git remote set-url origin git@github.com:ggglitter/auto-translator-native.git
 ```
 
-If new local commits were added after creating `v1.0.0`, the release gate will fail because the tag points at the older commit. Since `v1.0.0` has not been pushed yet, the better fix is to commit the intended changes, move the local tag to the final commit, and then push:
-
-```zsh
-git tag -f v1.0.0 HEAD
-```
-
-If the tag has already been pushed by the time this happens, do not rewrite the public tag. Create the next version instead, such as `v1.0.1`.
+`v1.0.0` has already been pushed, so do not rewrite or move that public tag. If more release changes are needed, create the next version instead, such as `v1.0.1`.
 
 ## 4. Trigger Windows/macOS Release Build
 
-Pushing the existing `v1.0.0` tag should trigger the `Desktop Release` workflow.
+Pushing a `v*` tag should trigger the `Desktop Release` workflow.
 
 The `Desktop Release` workflow should build:
 
-- macOS `.dmg`
-- macOS `.zip`
+- macOS universal `.dmg`
+- macOS universal `.zip`
 - Windows `.exe`
 - `.blockmap`
 - `latest.yml`
@@ -93,7 +94,7 @@ On GitHub:
 2. Confirm `Desktop Release` succeeded on `macos-14`.
 3. Confirm `Desktop Release` succeeded on `windows-latest`.
 4. Open Releases.
-5. Confirm tag `v1.0.0` exists.
+5. Confirm the intended release tag exists.
 6. Confirm both Windows and macOS artifacts exist.
 7. Confirm updater metadata files exist.
 
@@ -101,6 +102,12 @@ After downloading the artifacts or release assets locally, run:
 
 ```zsh
 ./scripts/check_release_artifacts.sh /path/to/release-artifacts
+```
+
+For the next macOS release, also enforce the universal mac artifact shape:
+
+```zsh
+./scripts/check_release_artifacts.sh --platform mac --mac-arch universal /path/to/release-artifacts
 ```
 
 ## 6. Signing Caveat

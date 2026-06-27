@@ -50,7 +50,7 @@ Expected current shape:
 
 - Preflight passed with `./scripts/preflight_local.sh`.
 - Release gate passed at `03a9c96` before docs-only handoff updates: `./scripts/check_release_gate.sh`.
-- Latest fixture directory: `/tmp/autotranslator-manual-smoke-20260627-200256`.
+- Latest fixture directory: `/tmp/autotranslator-manual-smoke-20260627-201841`.
 - Latest manual smoke bundle: `/tmp/autotranslator-manual-bundle-20260627-112011`.
 - Latest package: `/tmp/autotranslator-packages-20260627-111622/AutoTranslatorNative-1.0.0-20260627-111622.zip`.
 - Package checksum: `/tmp/autotranslator-packages-20260627-111622/AutoTranslatorNative-1.0.0-20260627-111622.zip.sha256`.
@@ -87,12 +87,12 @@ Hidden `.agents` and `.codex` directories could not be created because the sandb
 
 - Configure mac Developer ID signing and notarization outside the repo.
 - Configure Windows code signing outside the repo.
-- Add Intel or universal macOS build coverage if non-Apple-Silicon users must be supported.
+- Produce and verify the next universal macOS release artifacts; `v1.0.0` remains arm64-only.
 - Keep real API keys, certificates, provisioning profiles, and signing secrets out of repo files.
 
 ## Next Small Step
 
-Continue with production-signing readiness or architecture expansion. The source release baseline and ad-hoc release assets are already published and verified.
+Continue with production-signing readiness or a new universal macOS artifact build. The source release baseline and ad-hoc `v1.0.0` release assets are already published and verified.
 
 Useful next checks:
 

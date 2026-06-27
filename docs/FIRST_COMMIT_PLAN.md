@@ -6,11 +6,11 @@ The first local commit has been completed:
 
 - Commit: `8c732c4 Promote Auto Translator Native with desktop release pipeline`
 - Tag: `v1.0.0`
-- Remote: `origin https://github.com/ggglitter/auto-translator-native.git`
+- Current remote: `origin git@github.com:ggglitter/auto-translator-native.git`
 
 Keep this file as the source boundary reference for future amendments. Do not stage, commit, or push additional changes unless the user explicitly authorizes that Git gate.
 
-Current user goal authorizes GitHub publication and push eventually, but HTTPS push and domain/HTTPS update hosting are deferred until the final gate.
+GitHub publication is complete: `main` and `v1.0.0` have been pushed. Do not rewrite the public `v1.0.0` tag; create a later version tag for future releases.
 
 ## Original Commit Boundary
 
@@ -65,7 +65,7 @@ git status --short --branch --ignored
 git commit -m "Promote Auto Translator Native with desktop release pipeline"
 ```
 
-The current user goal authorizes GitHub push, but push still requires an authenticated GitHub remote.
+The current user goal authorizes GitHub publication and future release work, but each future stage/commit/push gate should still be intentional and verified.
 
 For the full publish sequence, see `docs/GITHUB_PUBLISH_RUNBOOK.md` or run:
 

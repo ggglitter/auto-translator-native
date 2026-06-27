@@ -44,8 +44,12 @@ for key in ["electron-updater", "mammoth", "pdf-parse"]:
     assert key in data["dependencies"], key
 for key in ["electron", "electron-builder"]:
     assert key in data["devDependencies"], key
-for key in ["dist:mac", "dist:win", "check"]:
+for key in ["dist:mac", "dist:mac:universal", "dist:mac:arm64", "dist:mac:x64", "dist:win", "check"]:
     assert key in data["scripts"], key
+assert "dist:mac:universal" in data["scripts"]["dist:mac"]
+assert "--universal" in data["scripts"]["dist:mac:universal"]
+assert "--arm64" in data["scripts"]["dist:mac:arm64"]
+assert "--x64" in data["scripts"]["dist:mac:x64"]
 print("package_json_ok")
 PY
 
@@ -56,6 +60,8 @@ echo "== github workflow =="
   exit 1
 }
 grep -q "macos-14" "$WORKFLOW"
+grep -q "macos-universal" "$WORKFLOW"
+grep -q "dist:mac:universal" "$WORKFLOW"
 grep -q "windows-latest" "$WORKFLOW"
 grep -q "gh release create" "$WORKFLOW"
 grep -Fq "latest*.yml" "$WORKFLOW"

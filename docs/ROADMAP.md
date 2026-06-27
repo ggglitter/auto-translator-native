@@ -2,10 +2,8 @@
 
 ## Next Small Slices
 
-- Keep HTTPS push, custom domain, and separate HTTPS OTA hosting as final gates.
-- After HTTPS push is resumed, publish source and tag to GitHub, then verify GitHub Actions build evidence.
-- Before final push, run `./scripts/check_release_gate.sh` so version, tag, clean tree, and origin are aligned.
 - Download Actions or Release artifacts and run `./scripts/check_release_artifacts.sh`.
+- For the next macOS release, enforce universal mac artifacts with `./scripts/check_release_artifacts.sh --platform mac --mac-arch universal`.
 - Configure signing/notarization secrets before claiming production macOS OTA.
 - Perform manual app-window pass and record real findings.
 
@@ -39,6 +37,8 @@
 - Add release artifact acceptance checker and artifact checklist.
 - Add signing/notarization plan without secrets.
 - Add final release gate for clean tree, version consistency, tag alignment, and origin validation.
+- Publish `main` and `v1.0.0` to GitHub and verify release assets.
+- Add universal mac release build command and CI artifact naming.
 
 ## Later
 

@@ -18,6 +18,7 @@ Last updated: 2026-06-27
 - SwiftUI source lives in `Sources/main.swift`.
 - App metadata lives in `Resources/Info.plist`.
 - Cross-platform Windows/macOS release source lives in `desktop/electron/`.
+- The next macOS Electron release is configured to build universal artifacts by default through `npm run dist:mac`.
 - Electron OTA UI includes check, download, and install controls backed by `electron-updater`.
 - Electron dependencies are pinned to exact versions in `desktop/electron/package.json` until a generated `package-lock.json` can be added from an authenticated/networked environment.
 - GitHub Actions release workflow lives in `.github/workflows/desktop-release.yml`.
@@ -46,7 +47,7 @@ Last updated: 2026-06-27
 - `scripts/package_local_app.sh` creates a local zip package, SHA-256 checksum, and `manifest.json` under `/tmp`, then verifies the checksum and zip structure.
 - `scripts/verify_local_package.sh` re-verifies an existing local package manifest, checksum, zip integrity, required `.app` members, and local-only publishing/secrets flags.
 - Latest verified local package: `/tmp/autotranslator-packages-20260627-111622/AutoTranslatorNative-1.0.0-20260627-111622.zip` with matching `.sha256` and `manifest.json`; `shasum -c`, `unzip -t`, `python3 -m json.tool`, and `./scripts/verify_local_package.sh` passed.
-- Local preflight is scripted in `scripts/preflight_local.sh`; it includes first-commit readiness, cross-platform release config, extraction smoke, app build, bundle launch-structure smoke, and LaunchServices environment discrimination. Latest run passed with fixture directory `/tmp/autotranslator-manual-smoke-20260627-200256`. Manual findings are tracked in `docs/MANUAL_SMOKE_FINDINGS.md`.
+- Local preflight is scripted in `scripts/preflight_local.sh`; it includes first-commit readiness, cross-platform release config, extraction smoke, app build, bundle launch-structure smoke, and LaunchServices environment discrimination. Latest run passed with fixture directory `/tmp/autotranslator-manual-smoke-20260627-201841`. Manual findings are tracked in `docs/MANUAL_SMOKE_FINDINGS.md`.
 - `scripts/check_repo_safety.sh` checks Git remote state, ignored output directories, and real-secret patterns without changing Git state. It accepts no remote before publication or the expected `ggglitter/auto-translator-native` origin after publication setup.
 - `docs/FIRST_COMMIT_PLAN.md` now records the completed first local commit boundary and required checks for future amendments.
 - `scripts/check_first_commit_ready.sh` validates the planned first-commit candidate set without staging files; latest run passed with `first_commit_ready_ok`.
@@ -64,4 +65,4 @@ Last updated: 2026-06-27
 - `gh` is not installed in this environment; GitHub publication has been handled through Git over SSH instead.
 - macOS user-facing OTA remains unsigned/not notarized for production until Developer ID signing and notarization secrets are configured outside the repo.
 - Windows release artifacts remain unsigned until a Windows code-signing certificate is configured outside the repo.
-- Current macOS release assets are arm64-only; Intel/universal macOS builds remain future work.
+- Current `v1.0.0` macOS release assets are arm64-only; the next release is configured for universal macOS artifacts but still needs a CI/package run to produce and verify them.

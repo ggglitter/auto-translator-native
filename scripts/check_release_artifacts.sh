@@ -6,7 +6,7 @@ ROOT="${0:A:h}/.."
 usage() {
   cat <<'EOF'
 Usage:
-  ./scripts/check_release_artifacts.sh [--platform all|mac|windows] [artifact-dir]
+  ./scripts/check_release_artifacts.sh [--platform all|mac|windows] [--mac-arch any|arm64|x64|universal] [artifact-dir]
 
 Validates Electron release artifacts produced by GitHub Actions or a local
 electron-builder dist directory. The check is recursive, so it accepts either a
@@ -14,12 +14,16 @@ merged release-artifacts folder or separate downloaded artifact folders.
 
 Defaults:
   --platform all
+  --mac-arch any
   artifact-dir desktop/electron/dist
 EOF
 }
 
 MODE="all"
-if (( $# > 0 )); then
+MAC_ARCH="any"
+ARTIFACT_DIR=""
+
+while (( $# > 0 )); do
   case "$1" in
     -h|--help)
       usage
@@ -38,8 +42,35 @@ if (( $# > 0 )); then
       MODE="${1#--platform=}"
       shift
       ;;
+    --mac-arch)
+      if (( $# < 2 )); then
+        echo "Missing value after --mac-arch." >&2
+        usage >&2
+        exit 2
+      fi
+      MAC_ARCH="$2"
+      shift 2
+      ;;
+    --mac-arch=*)
+      MAC_ARCH="${1#--mac-arch=}"
+      shift
+      ;;
+    --*)
+      echo "Unsupported option: $1" >&2
+      usage >&2
+      exit 2
+      ;;
+    *)
+      if [[ -n "$ARTIFACT_DIR" ]]; then
+        echo "Too many artifact directories." >&2
+        usage >&2
+        exit 2
+      fi
+      ARTIFACT_DIR="$1"
+      shift
+      ;;
   esac
-fi
+done
 
 case "$MODE" in
   all|mac|windows)
@@ -51,13 +82,17 @@ case "$MODE" in
     ;;
 esac
 
-if (( $# > 1 )); then
-  echo "Too many arguments." >&2
-  usage >&2
-  exit 2
-fi
+case "$MAC_ARCH" in
+  any|arm64|x64|universal)
+    ;;
+  *)
+    echo "Unsupported mac arch: $MAC_ARCH" >&2
+    usage >&2
+    exit 2
+    ;;
+esac
 
-ARTIFACT_DIR="${1:-$ROOT/desktop/electron/dist}"
+ARTIFACT_DIR="${ARTIFACT_DIR:-$ROOT/desktop/electron/dist}"
 
 if [[ ! -d "$ARTIFACT_DIR" ]]; then
   echo "Artifact directory does not exist: $ARTIFACT_DIR" >&2
@@ -75,7 +110,13 @@ find_matches() {
 require_any() {
   local label="$1"
   local pattern="$2"
-  local matches=("${(@f)$(find_matches "$pattern")}")
+  local raw_matches
+  local matches=()
+
+  raw_matches="$(find_matches "$pattern")"
+  if [[ -n "$raw_matches" ]]; then
+    matches=("${(@f)raw_matches}")
+  fi
 
   if (( ${#matches[@]} == 0 )); then
     echo "Missing $label ($pattern)" >&2
@@ -91,7 +132,13 @@ require_updater_yaml() {
   local label="$1"
   local filename="$2"
   local extension_pattern="$3"
-  local matches=("${(@f)$(find_matches "$filename")}")
+  local raw_matches
+  local matches=()
+
+  raw_matches="$(find_matches "$filename")"
+  if [[ -n "$raw_matches" ]]; then
+    matches=("${(@f)raw_matches}")
+  fi
 
   if (( ${#matches[@]} == 0 )); then
     echo "Missing $label ($filename)" >&2
@@ -128,14 +175,26 @@ require_updater_yaml() {
 
 echo "== release artifact directory =="
 echo "$ARTIFACT_DIR"
+echo "mac_arch_requirement=$MAC_ARCH"
 
 if [[ "$MODE" == "all" || "$MODE" == "mac" ]]; then
   echo
   echo "== macOS artifacts =="
-  require_any "macOS DMG" "*.dmg"
-  require_any "macOS ZIP updater payload" "*.zip"
-  require_any "macOS updater blockmap" "*.zip.blockmap"
-  require_updater_yaml "macOS updater metadata" "latest-mac.yml" "\\.zip"
+  if [[ "$MAC_ARCH" == "any" ]]; then
+    MAC_DMG_PATTERN="*.dmg"
+    MAC_ZIP_PATTERN="*.zip"
+    MAC_BLOCKMAP_PATTERN="*.zip.blockmap"
+    MAC_YAML_REFERENCE_PATTERN="\\.zip"
+  else
+    MAC_DMG_PATTERN="*${MAC_ARCH}*.dmg"
+    MAC_ZIP_PATTERN="*${MAC_ARCH}*.zip"
+    MAC_BLOCKMAP_PATTERN="*${MAC_ARCH}*.zip.blockmap"
+    MAC_YAML_REFERENCE_PATTERN="${MAC_ARCH}.*\\.zip|\\.zip.*${MAC_ARCH}"
+  fi
+  require_any "macOS DMG" "$MAC_DMG_PATTERN"
+  require_any "macOS ZIP updater payload" "$MAC_ZIP_PATTERN"
+  require_any "macOS updater blockmap" "$MAC_BLOCKMAP_PATTERN"
+  require_updater_yaml "macOS updater metadata" "latest-mac.yml" "$MAC_YAML_REFERENCE_PATTERN"
 fi
 
 if [[ "$MODE" == "all" || "$MODE" == "windows" ]]; then

@@ -22,6 +22,10 @@ The updater YAML files must include `version`, `files`, and `sha512` entries.
 The macOS metadata should reference the `.zip` payload. The Windows metadata
 should reference the `.exe` installer.
 
+For the next macOS release, prefer universal mac artifacts so both Apple
+Silicon and Intel Macs are covered by the same updater feed. The `v1.0.0`
+release assets are arm64-only and should be checked with `--mac-arch arm64`.
+
 ## Local Check
 
 After downloading GitHub Actions artifacts or a GitHub Release asset bundle,
@@ -42,13 +46,20 @@ To check one platform at a time:
 ./scripts/check_release_artifacts.sh --platform windows /path/to/auto-translator-windows
 ```
 
+To enforce a specific mac architecture in the filenames and `latest-mac.yml`:
+
+```zsh
+./scripts/check_release_artifacts.sh --platform mac --mac-arch universal /path/to/auto-translator-macos
+./scripts/check_release_artifacts.sh --platform mac --mac-arch arm64 /Users/laura/Downloads/AutoTranslatorDeliverables/ReleaseAssets-v1.0.0
+```
+
 To check a local Electron build output after dependencies are installed:
 
 ```zsh
 cd desktop/electron
 npm run dist:mac
 cd ../..
-./scripts/check_release_artifacts.sh --platform mac desktop/electron/dist
+./scripts/check_release_artifacts.sh --platform mac --mac-arch universal desktop/electron/dist
 ```
 
 Run the Windows build on Windows:
