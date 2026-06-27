@@ -93,36 +93,7 @@ echo "signing_docs_ok"
 
 echo
 echo "== signing workflow wiring =="
-WORKFLOW=".github/workflows/desktop-release.yml"
-[[ -f "$WORKFLOW" ]] || {
-  echo "Missing workflow: $WORKFLOW" >&2
-  exit 1
-}
-for token in \
-  "secrets.MAC_CSC_LINK" \
-  "secrets.MAC_CSC_KEY_PASSWORD" \
-  "secrets.APPLE_API_KEY" \
-  "secrets.APPLE_API_KEY_ID" \
-  "secrets.APPLE_API_ISSUER" \
-  "secrets.APPLE_ID" \
-  "secrets.APPLE_APP_SPECIFIC_PASSWORD" \
-  "secrets.APPLE_TEAM_ID" \
-  "secrets.WIN_CSC_LINK" \
-  "secrets.WIN_CSC_KEY_PASSWORD"
-do
-  grep -q "$token" "$WORKFLOW" || {
-    echo "Workflow is missing signing secret reference: $token" >&2
-    exit 1
-  }
-done
-grep -q "Build macOS desktop artifact" "$WORKFLOW" || {
-  echo "Workflow is missing separate macOS build step." >&2
-  exit 1
-}
-grep -q "Build Windows desktop artifact" "$WORKFLOW" || {
-  echo "Workflow is missing separate Windows build step." >&2
-  exit 1
-}
+./scripts/check_github_workflows.sh >/dev/null
 echo "signing_workflow_wiring_ok"
 
 echo

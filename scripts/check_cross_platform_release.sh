@@ -55,16 +55,7 @@ PY
 
 echo
 echo "== github workflow =="
-[[ -f "$WORKFLOW" ]] || {
-  echo "Missing workflow: $WORKFLOW" >&2
-  exit 1
-}
-grep -q "macos-14" "$WORKFLOW"
-grep -q "macos-universal" "$WORKFLOW"
-grep -q "dist:mac:universal" "$WORKFLOW"
-grep -q "windows-latest" "$WORKFLOW"
-grep -q "gh release create" "$WORKFLOW"
-grep -Fq "latest*.yml" "$WORKFLOW"
+./scripts/check_github_workflows.sh
 echo "github_workflow_ok"
 
 echo

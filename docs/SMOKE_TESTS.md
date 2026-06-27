@@ -2,7 +2,7 @@
 
 The local extraction smoke test verifies text extraction without network access or API keys.
 
-The full local preflight runs the repo safety gate, first-commit readiness gate, cross-platform release config check, signing readiness check, extraction smoke, fixture generation, app build, and launch-structure smoke:
+The full local preflight runs the repo safety gate, first-commit readiness gate, cross-platform release config check, GitHub workflow check, signing readiness check, extraction smoke, fixture generation, app build, and launch-structure smoke:
 
 ```zsh
 ./scripts/preflight_local.sh
@@ -36,6 +36,13 @@ The cross-platform release config check verifies Electron source, GitHub Actions
 
 ```zsh
 ./scripts/check_cross_platform_release.sh
+```
+
+The GitHub workflow check verifies release workflow triggers, permissions,
+matrix entries, build steps, signing secret-name wiring, and publishing steps:
+
+```zsh
+./scripts/check_github_workflows.sh
 ```
 
 The signing readiness check verifies the repo's non-secret signing boundary:
