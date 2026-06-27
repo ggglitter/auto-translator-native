@@ -78,6 +78,12 @@ grep -q -- "--platform" "$ROOT/scripts/check_release_artifacts.sh"
 echo "release_artifact_checker_ok"
 
 echo
+echo "== macOS release artifact checker =="
+[[ -x "$ROOT/scripts/check_macos_release_artifact.sh" ]]
+grep -q "macos_release_artifact_ok" "$ROOT/scripts/check_macos_release_artifact.sh"
+echo "macos_release_artifact_checker_ok"
+
+echo
 echo "== release gate checker =="
 [[ -x "$ROOT/scripts/check_release_gate.sh" ]]
 grep -q "release_tag_points_at_head_ok" "$ROOT/scripts/check_release_gate.sh"

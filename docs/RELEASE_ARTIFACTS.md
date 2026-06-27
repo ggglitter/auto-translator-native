@@ -53,6 +53,15 @@ To enforce a specific mac architecture in the filenames and `latest-mac.yml`:
 ./scripts/check_release_artifacts.sh --platform mac --mac-arch arm64 /Users/laura/Downloads/AutoTranslatorDeliverables/ReleaseAssets-v1.0.0
 ```
 
+For a deeper macOS check that also verifies the DMG checksum, extracts the ZIP,
+checks strict code signing, and verifies the contained app executable
+architecture:
+
+```zsh
+./scripts/check_macos_release_artifact.sh --mac-arch universal /path/to/auto-translator-macos
+./scripts/check_macos_release_artifact.sh --mac-arch arm64 /Users/laura/Downloads/AutoTranslatorDeliverables/ReleaseAssets-v1.0.0
+```
+
 To check a local Electron build output after dependencies are installed:
 
 ```zsh
@@ -76,6 +85,10 @@ artifact directory.
 
 Passing this check proves that the package set is structurally ready for a
 GitHub Release style OTA feed.
+
+Passing the macOS deep check additionally proves that the downloaded or local
+macOS DMG checksum is valid, the ZIP contains a verifiable `.app`, and the app
+binary matches the expected architecture.
 
 It does not prove:
 

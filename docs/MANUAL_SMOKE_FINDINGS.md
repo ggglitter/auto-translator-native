@@ -7,7 +7,7 @@ Last updated: 2026-06-27
 - Status: pass
 - Command: `./scripts/preflight_local.sh`
 - Last run: 2026-06-27
-- Fixture directory: `/tmp/autotranslator-manual-smoke-20260627-210036`
+- Fixture directory: `/tmp/autotranslator-manual-smoke-20260627-210857`
 - Covers: first-commit readiness, cross-platform release config, signing readiness, extraction smoke, disposable fixture generation, local app build, app launch smoke, real-secret pattern scan
 - Result: `preflight_ok`
 - Note: LaunchServices `open` returned `kLSNoExecutableErr` in the sandbox. A generated minimal `.app` fails the same way, so `smoke_launch_app.sh` records this as an environment limitation and passes bundle structure/codesign checks.
@@ -38,8 +38,10 @@ Last updated: 2026-06-27
 - GitHub repo: `https://github.com/ggglitter/auto-translator-native`
 - Asset directory: `/Users/laura/Downloads/AutoTranslatorDeliverables/ReleaseAssets-v1.0.0`
 - Artifact check: `./scripts/check_release_artifacts.sh /Users/laura/Downloads/AutoTranslatorDeliverables/ReleaseAssets-v1.0.0` passed with `release_artifacts_ok`
+- macOS deep artifact check: `./scripts/check_macos_release_artifact.sh --mac-arch arm64 /Users/laura/Downloads/AutoTranslatorDeliverables/ReleaseAssets-v1.0.0` passed with `macos_release_artifact_ok`
 - macOS ZIP strict codesign: passed after extracting `Auto.Translator.Native-1.0.0-arm64-mac.zip` and running strict deep verification on the contained app
 - macOS DMG verification: `hdiutil verify /Users/laura/Downloads/AutoTranslatorDeliverables/ReleaseAssets-v1.0.0/Auto.Translator.Native-1.0.0-arm64.dmg` passed
+- macOS app executable architecture: `arm64`
 - Remaining release hardening: mac Developer ID signing/notarization, Windows code signing, and Intel/universal macOS builds
 
 ## Findings

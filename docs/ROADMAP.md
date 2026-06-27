@@ -42,6 +42,7 @@
 - Add universal mac release build command and CI artifact naming.
 - Add CI signing secret-name wiring and production-signing ad-hoc skip guard.
 - Add local GitHub workflow release gate.
+- Add deep macOS release artifact verification.
 
 ## Later
 

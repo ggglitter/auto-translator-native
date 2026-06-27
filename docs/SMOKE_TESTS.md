@@ -45,6 +45,15 @@ matrix entries, build steps, signing secret-name wiring, and publishing steps:
 ./scripts/check_github_workflows.sh
 ```
 
+The macOS release artifact check verifies macOS release assets beyond shape:
+
+```zsh
+./scripts/check_macos_release_artifact.sh --mac-arch arm64 /Users/laura/Downloads/AutoTranslatorDeliverables/ReleaseAssets-v1.0.0
+```
+
+It verifies updater metadata shape, DMG checksum validity, ZIP extraction,
+strict app code signing, and the contained app executable architecture.
+
 The signing readiness check verifies the repo's non-secret signing boundary:
 
 ```zsh

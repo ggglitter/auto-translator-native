@@ -26,6 +26,7 @@ Last updated: 2026-06-27
 - GitHub Release / OTA plan lives in `docs/GITHUB_RELEASE_OTA.md`.
 - Release artifact acceptance criteria live in `docs/RELEASE_ARTIFACTS.md`.
 - `scripts/check_release_artifacts.sh` validates downloaded or local Electron release artifacts without network access.
+- `scripts/check_macos_release_artifact.sh` deep-checks macOS DMG verification, ZIP strict codesign, and executable architecture.
 - `scripts/check_release_gate.sh` validates final push readiness: clean tree, matching versions, release tag at HEAD, and expected origin.
 - Signing and notarization planning lives in `docs/SIGNING_NOTARIZATION_PLAN.md`.
 - Non-secret signing secret names live in `docs/SIGNING_SECRETS_CHECKLIST.md`.
@@ -35,6 +36,7 @@ Last updated: 2026-06-27
 - GitHub publication is complete for the source release baseline: `main` and `v1.0.0` are on `git@github.com:ggglitter/auto-translator-native.git`.
 - Latest downloaded release asset directory: `/Users/laura/Downloads/AutoTranslatorDeliverables/ReleaseAssets-v1.0.0`.
 - `ReleaseAssets-v1.0.0` verification passed with `./scripts/check_release_artifacts.sh /Users/laura/Downloads/AutoTranslatorDeliverables/ReleaseAssets-v1.0.0`.
+- `ReleaseAssets-v1.0.0` macOS deep verification passed with `./scripts/check_macos_release_artifact.sh --mac-arch arm64 /Users/laura/Downloads/AutoTranslatorDeliverables/ReleaseAssets-v1.0.0`.
 - macOS release ZIP strict codesign verification passed for the extracted app.
 - macOS DMG verification passed with `hdiutil verify`.
 - `build.sh` rebuilds and verifies a temporary `.app`, replaces the ignored local app bundle, then copies it to the repo as `Auto Translator Native.app`.
@@ -51,7 +53,7 @@ Last updated: 2026-06-27
 - `scripts/package_local_app.sh` creates a local zip package, SHA-256 checksum, and `manifest.json` under `/tmp`, then verifies the checksum and zip structure.
 - `scripts/verify_local_package.sh` re-verifies an existing local package manifest, checksum, zip integrity, required `.app` members, and local-only publishing/secrets flags.
 - Latest verified local package: `/tmp/autotranslator-packages-20260627-111622/AutoTranslatorNative-1.0.0-20260627-111622.zip` with matching `.sha256` and `manifest.json`; `shasum -c`, `unzip -t`, `python3 -m json.tool`, and `./scripts/verify_local_package.sh` passed.
-- Local preflight is scripted in `scripts/preflight_local.sh`; it includes first-commit readiness, cross-platform release config, GitHub workflow checks, signing readiness, extraction smoke, app build, bundle launch-structure smoke, and LaunchServices environment discrimination. Latest run passed with fixture directory `/tmp/autotranslator-manual-smoke-20260627-210036`. Manual findings are tracked in `docs/MANUAL_SMOKE_FINDINGS.md`.
+- Local preflight is scripted in `scripts/preflight_local.sh`; it includes first-commit readiness, cross-platform release config, GitHub workflow checks, signing readiness, extraction smoke, app build, bundle launch-structure smoke, and LaunchServices environment discrimination. Latest run passed with fixture directory `/tmp/autotranslator-manual-smoke-20260627-210857`. Manual findings are tracked in `docs/MANUAL_SMOKE_FINDINGS.md`.
 - `scripts/check_repo_safety.sh` checks Git remote state, ignored output directories, and real-secret patterns without changing Git state. It accepts no remote before publication or the expected `ggglitter/auto-translator-native` origin after publication setup.
 - `docs/FIRST_COMMIT_PLAN.md` now records the completed first local commit boundary and required checks for future amendments.
 - `scripts/check_first_commit_ready.sh` validates the planned first-commit candidate set without staging files; latest run passed with `first_commit_ready_ok`.

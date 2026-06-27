@@ -17,6 +17,7 @@ Current publication state:
 - `main` and `v1.0.0` are pushed to GitHub; `git ls-remote origin refs/heads/main refs/tags/v1.0.0` returned `03a9c96090046224dba468f97c15bc6dd1bec5ba` for both refs on 2026-06-27
 - release assets were downloaded to `/Users/laura/Downloads/AutoTranslatorDeliverables/ReleaseAssets-v1.0.0`
 - `ReleaseAssets-v1.0.0` passed the release artifact checker
+- `ReleaseAssets-v1.0.0` passed the macOS deep artifact checker with `--mac-arch arm64`
 - mac ZIP strict codesign verification passed
 - DMG `hdiutil verify` passed
 - real API keys must stay out of repo files and chat
@@ -50,7 +51,7 @@ Expected current shape:
 
 - Preflight passed with `./scripts/preflight_local.sh`.
 - Release gate passed at `03a9c96` before docs-only handoff updates: `./scripts/check_release_gate.sh`.
-- Latest fixture directory: `/tmp/autotranslator-manual-smoke-20260627-210036`.
+- Latest fixture directory: `/tmp/autotranslator-manual-smoke-20260627-210857`.
 - Latest manual smoke bundle: `/tmp/autotranslator-manual-bundle-20260627-112011`.
 - Latest package: `/tmp/autotranslator-packages-20260627-111622/AutoTranslatorNative-1.0.0-20260627-111622.zip`.
 - Package checksum: `/tmp/autotranslator-packages-20260627-111622/AutoTranslatorNative-1.0.0-20260627-111622.zip.sha256`.
@@ -68,8 +69,10 @@ Expected current shape:
 - GitHub Release / OTA plan: `docs/GITHUB_RELEASE_OTA.md`.
 - Release artifact checklist: `docs/RELEASE_ARTIFACTS.md`.
 - Release artifact checker: `./scripts/check_release_artifacts.sh`.
+- macOS release artifact deep checker: `./scripts/check_macos_release_artifact.sh`.
 - Downloaded release artifacts: `/Users/laura/Downloads/AutoTranslatorDeliverables/ReleaseAssets-v1.0.0`.
 - Release artifact check passed for the downloaded assets.
+- macOS deep artifact check passed for the downloaded assets with `--mac-arch arm64`.
 - macOS ZIP strict codesign verification passed for the extracted app.
 - DMG `hdiutil verify` passed.
 - Signing/notarization plan: `docs/SIGNING_NOTARIZATION_PLAN.md`.
@@ -120,6 +123,7 @@ After GitHub Actions or local Electron builds produce artifacts, validate them w
 
 ```zsh
 ./scripts/check_release_artifacts.sh /path/to/release-artifacts
+./scripts/check_macos_release_artifact.sh --mac-arch universal /path/to/release-artifacts
 ```
 
 Manual app-window pass still needs real desktop verification using `/tmp/autotranslator-manual-bundle-20260627-112011`:
