@@ -68,6 +68,24 @@ done
 echo "source_checks_steps_ok"
 
 echo
+echo "== source checks isolation =="
+for token in \
+  "contents: write" \
+  "gh release" \
+  "actions/upload-artifact" \
+  "secrets." \
+  "electron-builder" \
+  "npm run dist:mac" \
+  "npm run dist:win"
+do
+  if grep -Fq "$token" "$SOURCE_WORKFLOW"; then
+    echo "Source Checks workflow must not publish, sign, or build release artifacts: $token" >&2
+    exit 1
+  fi
+done
+echo "source_checks_isolation_ok"
+
+echo
 echo "== desktop release triggers =="
 grep -q "^  workflow_dispatch:" "$RELEASE_WORKFLOW" || {
   echo "Desktop Release workflow must support manual workflow_dispatch." >&2

@@ -84,7 +84,7 @@ echo "scripts_executable_ok"
 
 echo
 echo "== candidate real secret pattern scan =="
-if "$RG_BIN" -n "sk-[A-Za-z0-9_-]{20,}|AIza[0-9A-Za-z_-]{20,}|Bearer [A-Za-z0-9._-]{20,}" -S -- "${FILES[@]}"; then
+if "$RG_BIN" -n --hidden "sk-[A-Za-z0-9_-]{20,}|AIza[0-9A-Za-z_-]{20,}|Bearer [A-Za-z0-9._-]{20,}" -S -- "${FILES[@]}"; then
   echo "Potential real secret pattern found in first commit candidate files." >&2
   exit 1
 fi

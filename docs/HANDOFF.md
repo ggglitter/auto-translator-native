@@ -29,7 +29,13 @@ Run these first:
 ```zsh
 git status --short --branch --ignored
 git remote -v
-rg -n "sk-[A-Za-z0-9_-]{20,}|AIza[0-9A-Za-z_-]{20,}|Bearer [A-Za-z0-9._-]{20,}" -S . -g '!work' -g '!Auto Translator Native.app'
+rg -n --hidden "sk-[A-Za-z0-9_-]{20,}|AIza[0-9A-Za-z_-]{20,}|Bearer [A-Za-z0-9._-]{20,}" -S . \
+  -g '!.git' \
+  -g '!.git/**' \
+  -g '!work' \
+  -g '!work/**' \
+  -g '!Auto Translator Native.app' \
+  -g '!Auto Translator Native.app/**'
 ```
 
 Or run the combined local-only gate:
@@ -58,7 +64,7 @@ Expected current shape:
 - Package manifest: `/tmp/autotranslator-packages-20260627-111622/manifest.json`.
 - `shasum -c`, `unzip -t`, `python3 -m json.tool`, `./scripts/verify_local_package.sh`, and `codesign --verify --deep` passed for the relevant local artifacts.
 - `./scripts/verify_local_package.sh` can re-verify the latest package directory or manifest.
-- `./scripts/check_repo_safety.sh` is the remote/ignored-output/real-secret pattern gate. It accepts no remote before publication or the expected `ggglitter/auto-translator-native` origin after publication setup.
+- `./scripts/check_repo_safety.sh` is the remote/ignored-output/real-secret pattern gate. It scans hidden repo files such as `.github`, excludes `.git` and local outputs, and accepts no remote before publication or the expected `ggglitter/auto-translator-native` origin after publication setup.
 - `docs/FIRST_COMMIT_PLAN.md` documents the exact first local commit boundary, but no staging or commit has been performed.
 - `./scripts/check_first_commit_ready.sh` validates the planned first-commit candidate set without staging files; latest run passed with `first_commit_ready_ok`.
 - `./scripts/preflight_local.sh` now runs first-commit readiness, cross-platform release config, GitHub workflow checks, and signing readiness before extraction/build/launch smoke; latest run passed with `preflight_ok`.
@@ -80,7 +86,7 @@ Expected current shape:
 - Signing secret-name checklist: `docs/SIGNING_SECRETS_CHECKLIST.md`.
 - Signing readiness gate: `./scripts/check_signing_readiness.sh`.
 - GitHub Actions signing secret-name wiring is in place for macOS and Windows build steps.
-- GitHub Actions source checks run repo safety, cross-platform release config, signing readiness, and extraction smoke without secrets.
+- GitHub Actions source checks run repo safety, cross-platform release config, signing readiness, and extraction smoke without secrets; the workflow gate rejects publishing, artifact-upload, and signing-secret references in that source-check workflow.
 - `desktop/electron/scripts/adhoc-sign-mac.cjs` skips ad-hoc signing when production mac signing env is present.
 - GitHub publish runbook: `docs/GITHUB_PUBLISH_RUNBOOK.md`.
 - Electron OTA UI has check, download, and install controls wired to `electron-updater`.

@@ -29,7 +29,7 @@ Expected output is a regenerated local `Auto Translator Native.app` signed with 
 ## Verification Ladder
 
 1. Run `git status --short --branch`.
-2. Run a secret scan such as `rg -n "sk-|AIza|api[_-]?key|secret|token|Bearer" -S . -g '!work' -g '!Auto Translator Native.app'`.
+2. Run `./scripts/check_repo_safety.sh` or an equivalent hidden-aware secret scan that excludes `.git` and local output directories.
 3. Run `./build.sh`.
 4. Open the app locally and verify drag-and-drop, key saving, and missing-key validation.
 5. Only use real API keys through macOS Keychain during manual smoke tests.

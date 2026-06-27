@@ -14,7 +14,7 @@ The repo safety check verifies local-only repository boundaries without modifyin
 ./scripts/check_repo_safety.sh
 ```
 
-It checks that Git remote state is either absent or the expected `ggglitter/auto-translator-native` origin, local build outputs remain ignored, and no real-looking API key/token patterns are present in repo files. Secret scanning requires `rg`; the scripts fail if `rg` cannot be found in PATH or common Homebrew locations.
+It checks that Git remote state is either absent or the expected `ggglitter/auto-translator-native` origin, local build outputs remain ignored, and no real-looking API key/token patterns are present in repo files, including hidden repo files such as `.github`. Secret scanning requires `rg`; the scripts fail if `rg` cannot be found in PATH or common Homebrew locations.
 
 The first commit readiness check verifies the planned source/doc/script candidate set without staging files:
 
@@ -49,7 +49,9 @@ the no-secret source-check workflow:
 The source-check workflow runs on `main`, pull requests targeting `main`, and
 manual dispatch. It executes repo safety, cross-platform release config,
 signing readiness, and extraction smoke checks without storing or requiring
-real API keys or signing credentials.
+real API keys or signing credentials. The workflow gate also verifies the
+source-check workflow does not publish releases, upload artifacts, reference
+signing secrets, or build release artifacts.
 
 The macOS release artifact check verifies macOS release assets beyond shape:
 

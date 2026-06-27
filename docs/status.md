@@ -23,7 +23,7 @@ Last updated: 2026-06-27
 - Electron dependencies are pinned to exact versions in `desktop/electron/package.json` until a generated `package-lock.json` can be added from an authenticated/networked environment.
 - GitHub Actions release workflow lives in `.github/workflows/desktop-release.yml`.
 - GitHub Actions source-check workflow lives in `.github/workflows/source-checks.yml`; it runs no-secret local source gates on `main`, pull requests, and manual dispatch.
-- `scripts/check_github_workflows.sh` validates the source-check workflow plus the release workflow triggers, build matrix, signing wiring, artifact upload, and release publishing steps.
+- `scripts/check_github_workflows.sh` validates the source-check workflow, verifies it does not publish/sign/build release artifacts, and validates the release workflow triggers, build matrix, signing wiring, artifact upload, and release publishing steps.
 - GitHub Release / OTA plan lives in `docs/GITHUB_RELEASE_OTA.md`.
 - Release artifact acceptance criteria live in `docs/RELEASE_ARTIFACTS.md`.
 - `scripts/check_release_artifacts.sh` validates downloaded or local Electron release artifacts without network access.
@@ -55,7 +55,7 @@ Last updated: 2026-06-27
 - `scripts/verify_local_package.sh` re-verifies an existing local package manifest, checksum, zip integrity, required `.app` members, and local-only publishing/secrets flags.
 - Latest verified local package: `/tmp/autotranslator-packages-20260627-111622/AutoTranslatorNative-1.0.0-20260627-111622.zip` with matching `.sha256` and `manifest.json`; `shasum -c`, `unzip -t`, `python3 -m json.tool`, and `./scripts/verify_local_package.sh` passed.
 - Local preflight is scripted in `scripts/preflight_local.sh`; it includes first-commit readiness, cross-platform release config, GitHub workflow checks, signing readiness, extraction smoke, app build, bundle launch-structure smoke, and LaunchServices environment discrimination. Latest run passed with fixture directory `/tmp/autotranslator-manual-smoke-20260627-211900`. Manual findings are tracked in `docs/MANUAL_SMOKE_FINDINGS.md`.
-- `scripts/check_repo_safety.sh` checks Git remote state, ignored output directories, and real-secret patterns without changing Git state. It accepts no remote before publication or the expected `ggglitter/auto-translator-native` origin after publication setup.
+- `scripts/check_repo_safety.sh` checks Git remote state, ignored output directories, and real-secret patterns, including hidden repo files such as `.github`, without changing Git state. It accepts no remote before publication or the expected `ggglitter/auto-translator-native` origin after publication setup.
 - `docs/FIRST_COMMIT_PLAN.md` now records the completed first local commit boundary and required checks for future amendments.
 - `scripts/check_first_commit_ready.sh` validates the planned first-commit candidate set without staging files; latest run passed with `first_commit_ready_ok`.
 - Secret scanning scripts resolve `rg` from PATH or common Homebrew locations and fail if it is unavailable, avoiding false passes when non-interactive PATH is sparse.

@@ -11,7 +11,13 @@ Use this file as the repo-local continuation entry until hidden `.agents/skills/
 ```zsh
 git status --short --branch
 git remote -v
-rg -n "sk-[A-Za-z0-9_-]{20,}|AIza[0-9A-Za-z_-]{20,}|Bearer [A-Za-z0-9._-]{20,}" -S . -g '!work' -g '!Auto Translator Native.app'
+rg -n --hidden "sk-[A-Za-z0-9_-]{20,}|AIza[0-9A-Za-z_-]{20,}|Bearer [A-Za-z0-9._-]{20,}" -S . \
+  -g '!.git' \
+  -g '!.git/**' \
+  -g '!work' \
+  -g '!work/**' \
+  -g '!Auto Translator Native.app' \
+  -g '!Auto Translator Native.app/**'
 ```
 
 ## Safe Local Verification
