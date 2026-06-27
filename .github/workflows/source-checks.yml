@@ -1,0 +1,40 @@
+name: Source Checks
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  source-checks:
+    name: Local source gates
+    runs-on: macos-14
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Ensure ripgrep
+        run: |
+          if ! command -v rg >/dev/null 2>&1; then
+            brew install ripgrep
+          fi
+
+      - name: Repository safety
+        run: ./scripts/check_repo_safety.sh
+
+      - name: Cross-platform release config
+        run: ./scripts/check_cross_platform_release.sh
+
+      - name: Signing readiness
+        run: ./scripts/check_signing_readiness.sh
+
+      - name: Extraction smoke
+        run: ./scripts/smoke_extract.sh

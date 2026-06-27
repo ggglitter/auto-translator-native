@@ -28,6 +28,7 @@ It uses:
 - `electron-updater` for OTA checks from GitHub Releases
 - Renderer controls for checking, downloading, and installing OTA updates
 - GitHub Actions workflow `.github/workflows/desktop-release.yml`
+- GitHub Actions source checks in `.github/workflows/source-checks.yml`
 - Exact Electron dependency versions in `desktop/electron/package.json` to reduce release-build drift before a lockfile is generated
 
 The existing SwiftUI app remains as the native macOS source track under `Sources/`.
@@ -64,6 +65,7 @@ git status --short --branch
 On GitHub, verify:
 
 - Actions tab has a successful `Desktop Release` build.
+- Actions tab has successful `Source Checks` runs for normal source pushes or pull requests.
 - A tag build creates a Release.
 - Release assets include both Windows and macOS artifacts plus updater YAML files.
 

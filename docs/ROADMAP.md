@@ -43,6 +43,7 @@
 - Add CI signing secret-name wiring and production-signing ad-hoc skip guard.
 - Add local GitHub workflow release gate.
 - Add deep macOS release artifact verification.
+- Add no-secret GitHub source checks for main and pull requests.
 
 ## Later
 

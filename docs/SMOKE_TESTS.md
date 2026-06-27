@@ -39,11 +39,17 @@ The cross-platform release config check verifies Electron source, GitHub Actions
 ```
 
 The GitHub workflow check verifies release workflow triggers, permissions,
-matrix entries, build steps, signing secret-name wiring, and publishing steps:
+matrix entries, build steps, signing secret-name wiring, publishing steps, and
+the no-secret source-check workflow:
 
 ```zsh
 ./scripts/check_github_workflows.sh
 ```
+
+The source-check workflow runs on `main`, pull requests targeting `main`, and
+manual dispatch. It executes repo safety, cross-platform release config,
+signing readiness, and extraction smoke checks without storing or requiring
+real API keys or signing credentials.
 
 The macOS release artifact check verifies macOS release assets beyond shape:
 

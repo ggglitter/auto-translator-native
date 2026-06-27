@@ -14,7 +14,7 @@ Current publication state:
 - local remote: `origin git@github.com:ggglitter/auto-translator-native.git`
 - release commit: `03a9c96 Add ad-hoc mac release signing`
 - release tag: `v1.0.0`
-- `main` and `v1.0.0` are pushed to GitHub; `git ls-remote origin refs/heads/main refs/tags/v1.0.0` returned `03a9c96090046224dba468f97c15bc6dd1bec5ba` for both refs on 2026-06-27
+- `main` and `v1.0.0` are pushed to GitHub; `v1.0.0` remains pinned to `03a9c96090046224dba468f97c15bc6dd1bec5ba`, while `main` intentionally continues with follow-up release-readiness commits
 - release assets were downloaded to `/Users/laura/Downloads/AutoTranslatorDeliverables/ReleaseAssets-v1.0.0`
 - `ReleaseAssets-v1.0.0` passed the release artifact checker
 - `ReleaseAssets-v1.0.0` passed the macOS deep artifact checker with `--mac-arch arm64`
@@ -51,7 +51,7 @@ Expected current shape:
 
 - Preflight passed with `./scripts/preflight_local.sh`.
 - Release gate passed at `03a9c96` before docs-only handoff updates: `./scripts/check_release_gate.sh`.
-- Latest fixture directory: `/tmp/autotranslator-manual-smoke-20260627-210857`.
+- Latest fixture directory: `/tmp/autotranslator-manual-smoke-20260627-211900`.
 - Latest manual smoke bundle: `/tmp/autotranslator-manual-bundle-20260627-112011`.
 - Latest package: `/tmp/autotranslator-packages-20260627-111622/AutoTranslatorNative-1.0.0-20260627-111622.zip`.
 - Package checksum: `/tmp/autotranslator-packages-20260627-111622/AutoTranslatorNative-1.0.0-20260627-111622.zip.sha256`.
@@ -65,6 +65,7 @@ Expected current shape:
 - `./scripts/verify_manual_smoke_bundle.sh` can re-verify a manual smoke bundle before the user opens it.
 - Cross-platform release track: `desktop/electron/`.
 - GitHub Actions workflow: `.github/workflows/desktop-release.yml`.
+- GitHub source-check workflow: `.github/workflows/source-checks.yml`.
 - GitHub workflow gate: `./scripts/check_github_workflows.sh`.
 - GitHub Release / OTA plan: `docs/GITHUB_RELEASE_OTA.md`.
 - Release artifact checklist: `docs/RELEASE_ARTIFACTS.md`.
@@ -79,6 +80,7 @@ Expected current shape:
 - Signing secret-name checklist: `docs/SIGNING_SECRETS_CHECKLIST.md`.
 - Signing readiness gate: `./scripts/check_signing_readiness.sh`.
 - GitHub Actions signing secret-name wiring is in place for macOS and Windows build steps.
+- GitHub Actions source checks run repo safety, cross-platform release config, signing readiness, and extraction smoke without secrets.
 - `desktop/electron/scripts/adhoc-sign-mac.cjs` skips ad-hoc signing when production mac signing env is present.
 - GitHub publish runbook: `docs/GITHUB_PUBLISH_RUNBOOK.md`.
 - Electron OTA UI has check, download, and install controls wired to `electron-updater`.

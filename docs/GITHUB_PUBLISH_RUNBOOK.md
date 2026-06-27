@@ -40,6 +40,7 @@ Expected:
 - `repo_safety_ok`
 - `first_commit_ready_ok`
 - `cross_platform_release_config_ok`
+- `github_workflows_ok`
 - `preflight_ok`
 
 ## 3. Follow-Up Commit And Push
@@ -51,6 +52,7 @@ For a docs/source follow-up on `main`:
 ```zsh
 git status --short --branch --ignored
 ./scripts/check_repo_safety.sh
+./scripts/check_github_workflows.sh
 git push origin main
 ```
 

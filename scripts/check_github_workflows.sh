@@ -2,28 +2,82 @@
 set -euo pipefail
 
 ROOT="${0:A:h}/.."
-WORKFLOW="$ROOT/.github/workflows/desktop-release.yml"
+RELEASE_WORKFLOW="$ROOT/.github/workflows/desktop-release.yml"
+SOURCE_WORKFLOW="$ROOT/.github/workflows/source-checks.yml"
 
 cd "$ROOT"
 
 echo "== workflow files =="
-[[ -f "$WORKFLOW" ]] || {
-  echo "Missing workflow: $WORKFLOW" >&2
+[[ -f "$RELEASE_WORKFLOW" ]] || {
+  echo "Missing workflow: $RELEASE_WORKFLOW" >&2
+  exit 1
+}
+[[ -f "$SOURCE_WORKFLOW" ]] || {
+  echo "Missing workflow: $SOURCE_WORKFLOW" >&2
   exit 1
 }
 echo "desktop_release_workflow_present_ok"
+echo "source_checks_workflow_present_ok"
+
+echo
+echo "== source checks triggers =="
+grep -q "^  workflow_dispatch:" "$SOURCE_WORKFLOW" || {
+  echo "Source Checks workflow must support manual workflow_dispatch." >&2
+  exit 1
+}
+grep -q "^  push:" "$SOURCE_WORKFLOW" || {
+  echo "Source Checks workflow must run on main pushes." >&2
+  exit 1
+}
+grep -q "^  pull_request:" "$SOURCE_WORKFLOW" || {
+  echo "Source Checks workflow must run on main pull requests." >&2
+  exit 1
+}
+grep -q "^      - main" "$SOURCE_WORKFLOW" || {
+  echo "Source Checks workflow must target main." >&2
+  exit 1
+}
+echo "source_checks_triggers_ok"
+
+echo
+echo "== source checks permissions =="
+grep -q "^permissions:" "$SOURCE_WORKFLOW"
+grep -q "contents: read" "$SOURCE_WORKFLOW" || {
+  echo "Source Checks workflow should only need contents: read." >&2
+  exit 1
+}
+echo "source_checks_permissions_ok"
+
+echo
+echo "== source checks steps =="
+for token in \
+  "name: Source Checks" \
+  "runs-on: macos-14" \
+  "uses: actions/checkout@v4" \
+  "brew install ripgrep" \
+  "run: ./scripts/check_repo_safety.sh" \
+  "run: ./scripts/check_cross_platform_release.sh" \
+  "run: ./scripts/check_signing_readiness.sh" \
+  "run: ./scripts/smoke_extract.sh"
+do
+  grep -Fq "$token" "$SOURCE_WORKFLOW" || {
+    echo "Source Checks workflow is missing token: $token" >&2
+    exit 1
+  }
+done
+echo "source_checks_steps_ok"
 
 echo
 echo "== desktop release triggers =="
-grep -q "^  workflow_dispatch:" "$WORKFLOW" || {
+grep -q "^  workflow_dispatch:" "$RELEASE_WORKFLOW" || {
   echo "Desktop Release workflow must support manual workflow_dispatch." >&2
   exit 1
 }
-grep -q "^  push:" "$WORKFLOW" || {
+grep -q "^  push:" "$RELEASE_WORKFLOW" || {
   echo "Desktop Release workflow must run on tag pushes." >&2
   exit 1
 }
-grep -q '      - "v\*"' "$WORKFLOW" || {
+grep -q '      - "v\*"' "$RELEASE_WORKFLOW" || {
   echo "Desktop Release workflow must include v* tag trigger." >&2
   exit 1
 }
@@ -31,8 +85,8 @@ echo "desktop_release_triggers_ok"
 
 echo
 echo "== desktop release permissions =="
-grep -q "^permissions:" "$WORKFLOW"
-grep -q "contents: write" "$WORKFLOW" || {
+grep -q "^permissions:" "$RELEASE_WORKFLOW"
+grep -q "contents: write" "$RELEASE_WORKFLOW" || {
   echo "Desktop Release workflow needs contents: write to publish releases." >&2
   exit 1
 }
@@ -48,7 +102,7 @@ for token in \
   "artifact: windows" \
   "npm run dist:win"
 do
-  grep -q "$token" "$WORKFLOW" || {
+  grep -q "$token" "$RELEASE_WORKFLOW" || {
     echo "Desktop Release workflow is missing matrix token: $token" >&2
     exit 1
   }
@@ -67,7 +121,7 @@ for token in \
   "Build Windows desktop artifact" \
   "uses: actions/upload-artifact@v4"
 do
-  grep -q "$token" "$WORKFLOW" || {
+  grep -q "$token" "$RELEASE_WORKFLOW" || {
     echo "Desktop Release workflow is missing build step token: $token" >&2
     exit 1
   }
@@ -88,7 +142,7 @@ for token in \
   "secrets.WIN_CSC_LINK" \
   "secrets.WIN_CSC_KEY_PASSWORD"
 do
-  grep -q "$token" "$WORKFLOW" || {
+  grep -q "$token" "$RELEASE_WORKFLOW" || {
     echo "Desktop Release workflow is missing signing secret reference: $token" >&2
     exit 1
   }
@@ -104,7 +158,7 @@ for token in \
   "gh release create" \
   "latest*.yml"
 do
-  grep -Fq "$token" "$WORKFLOW" || {
+  grep -Fq "$token" "$RELEASE_WORKFLOW" || {
     echo "Desktop Release workflow is missing publish token: $token" >&2
     exit 1
   }
