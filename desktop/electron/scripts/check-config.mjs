@@ -26,6 +26,9 @@ const scripts = pkg.scripts || {};
 if (build.appId !== "com.codex.autotranslator.native") {
   throw new Error("Unexpected Electron appId.");
 }
+if (build.artifactName !== "Auto-Translator-Native-${version}-${arch}.${ext}") {
+  throw new Error("Electron artifactName must keep release asset names aligned with updater metadata URLs.");
+}
 if (publish.provider !== "github") {
   throw new Error("Electron updater publish provider must be github.");
 }

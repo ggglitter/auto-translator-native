@@ -30,6 +30,7 @@ It uses:
 - GitHub Actions workflow `.github/workflows/desktop-release.yml`
 - GitHub Actions source checks in `.github/workflows/source-checks.yml`
 - Exact Electron dependency versions in `desktop/electron/package.json` to reduce release-build drift before a lockfile is generated
+- Explicit Electron artifact names through `Auto-Translator-Native-${version}-${arch}.${ext}` so updater metadata URLs match uploaded payload filenames
 
 The existing SwiftUI app remains as the native macOS source track under `Sources/`.
 

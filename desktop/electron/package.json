@@ -28,6 +28,7 @@
   "build": {
     "appId": "com.codex.autotranslator.native",
     "productName": "Auto Translator Native",
+    "artifactName": "Auto-Translator-Native-${version}-${arch}.${ext}",
     "directories": {
       "output": "dist"
     },

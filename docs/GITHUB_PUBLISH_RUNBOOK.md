@@ -81,9 +81,9 @@ Pushing a `v*` tag should trigger the `Desktop Release` workflow.
 
 The `Desktop Release` workflow should build:
 
-- macOS universal `.dmg`
-- macOS universal `.zip`
-- Windows `.exe`
+- macOS universal `.dmg` using the `Auto-Translator-Native-<version>-<arch>.dmg` naming template
+- macOS universal `.zip` using the `Auto-Translator-Native-<version>-<arch>.zip` naming template
+- Windows `.exe` using the `Auto-Translator-Native-<version>-<arch>.exe` naming template
 - `.blockmap`
 - `latest.yml`
 - `latest-mac.yml`

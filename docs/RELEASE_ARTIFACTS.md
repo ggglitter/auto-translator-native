@@ -52,6 +52,15 @@ the downloaded assets use dotted file names. Treat that as an OTA metadata
 blocker until the GitHub Release assets are renamed/reuploaded or the next
 release is produced with matching names.
 
+Future Electron builds should use the explicit artifact name template from
+`desktop/electron/package.json`:
+
+```text
+Auto-Translator-Native-${version}-${arch}.${ext}
+```
+
+This keeps the generated updater metadata URLs and payload file names aligned.
+
 To check one platform at a time:
 
 ```zsh

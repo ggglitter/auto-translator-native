@@ -19,6 +19,7 @@ Last updated: 2026-06-27
 - App metadata lives in `Resources/Info.plist`.
 - Cross-platform Windows/macOS release source lives in `desktop/electron/`.
 - The next macOS Electron release is configured to build universal artifacts by default through `npm run dist:mac`.
+- Electron Builder has an explicit artifact name template, `Auto-Translator-Native-${version}-${arch}.${ext}`, so future updater metadata URLs and uploaded payload filenames are generated from the same value.
 - Electron OTA UI includes check, download, and install controls backed by `electron-updater`.
 - Electron dependencies are pinned to exact versions in `desktop/electron/package.json` until a generated `package-lock.json` can be added from an authenticated/networked environment.
 - GitHub Actions release workflow lives in `.github/workflows/desktop-release.yml`.

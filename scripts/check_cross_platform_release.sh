@@ -37,6 +37,7 @@ publish = (build.get("publish") or [{}])[0]
 
 assert data["name"] == "auto-translator-native-desktop"
 assert build["appId"] == "com.codex.autotranslator.native"
+assert build["artifactName"] == "Auto-Translator-Native-${version}-${arch}.${ext}"
 assert publish["provider"] == "github"
 assert publish["owner"] == "ggglitter"
 assert publish["repo"] == "auto-translator-native"

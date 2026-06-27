@@ -70,6 +70,7 @@ Expected current shape:
 - `./scripts/preflight_local.sh` now runs first-commit readiness, cross-platform release config, GitHub workflow checks, and signing readiness before extraction/build/launch smoke; latest run passed with `preflight_ok`.
 - `./scripts/verify_manual_smoke_bundle.sh` can re-verify a manual smoke bundle before the user opens it.
 - Cross-platform release track: `desktop/electron/`.
+- Electron Builder artifact name template: `Auto-Translator-Native-${version}-${arch}.${ext}`.
 - GitHub Actions workflow: `.github/workflows/desktop-release.yml`.
 - GitHub source-check workflow: `.github/workflows/source-checks.yml`.
 - GitHub workflow gate: `./scripts/check_github_workflows.sh`.
@@ -111,7 +112,7 @@ Hidden `.agents` and `.codex` directories could not be created because the sandb
 
 ## Next Small Step
 
-Continue by fixing the updater metadata asset-name mismatch in GitHub Release artifacts, or produce a new universal macOS artifact build whose `latest*.yml` URLs exactly match the uploaded asset filenames. CI secret-name wiring is already in place; real secret values must stay outside the repo.
+Continue by producing a new universal macOS artifact build and verifying that `latest*.yml` URLs exactly match the uploaded artifact filenames. CI secret-name wiring is already in place; real secret values must stay outside the repo.
 
 Useful next checks:
 
